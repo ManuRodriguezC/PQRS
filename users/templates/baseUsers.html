@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}PQRS Cootratiempo{% endblock title %}
+
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/baseUser.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/aside.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/areas.css' %}"/>
+{% endblock styles %}
+
+{% block content %}
+    {% load django_browser_reload %}
+    <aside>
+        <div class="top">
+            <div class="top-user">
+                <p class="user-name">{{ request.user.username }}</p>
+                {% include "icons/user.html" %}
+            </div>
+            <p class="version">pqrs v.1</p>
+        </div>
+    
+        <div class="general">
+            <p class="sub-title">General</p>
+            <div class="general-cases">
+                <a href="{% url 'home' %}" class="cases">
+                    {% include "icons/openCases.html" %}
+                    <p>Casos Abiertos</p>
+                </a>
+                <a href="{% url 'closedpqrs' %}" class="cases">
+                    {% include "icons/closeCases.html" %}
+                    <p>Casos Cerrados</p>
+                </a>
+                <a href="{% url 'expiredpqrs' %}" class="cases">
+                    {% include "icons/venCases.html" %}
+                    <p>Casos Casos Vencidos</p>
+                </a>
+            </div>
+        </div>
+
+        {% if request.user.is_staff %}
+        <div class="admin">
+            <p class="sub-title">Administrador</p>
+            <div class="general-cases">
+                <a href="{% url 'areas' %}" class="cases">
+                    {% include "icons/openCases.html" %}
+                    <p>Areas</p>
+                </a>
+                <a href="{% url 'typesPQRS' %}" class="cases">
+                    {% include "icons/closeCases.html" %}
+                    <p>Tipos PQRS</p>
+                </a>
+                <a href="{% url 'users' %}" class="cases">
+                    {% include "icons/venCases.html" %}
+                    <p>Usuarios</p>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+    </aside>
+
+    <main>
+        {% include "header.html" %}
+        <div class="separator"></div>
+        {% block datas %}
+        
+        {% endblock datas %}
+    </main>
+{% endblock content %}

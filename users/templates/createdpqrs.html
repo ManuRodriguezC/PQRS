@@ -1,0 +1,16 @@
+{% extends "baseUsers.html" %}
+{% load static %}
+
+{% block datas %}
+    <section class="created-pqrs">
+        <h2>Crear PQRS</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">
+                Crear PQRS
+            </button>
+        </form>
+    </section>
+
+{% endblock datas %}

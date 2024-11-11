@@ -1,0 +1,38 @@
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 30px;
+}
+
+.user {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.user p {
+    font-weight: 900;
+}
+
+.new {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #cae8fc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    border: 0px;
+    font-size: 17px;
+    gap: 20px;
+    color: rgb(19, 19, 173);
+}
+
+.exit {
+    background-color: transparent;
+    border: 0px;
+    cursor: pointer;
+}

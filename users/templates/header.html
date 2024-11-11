@@ -1,0 +1,17 @@
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}"/>
+{% endblock styles %}
+
+<header>
+    <a href="{% url 'createdpqrs' %}" class="new">
+        {% include "icons/new.html" %}
+        Nueva PQRS
+    </a>
+    <div class="user">
+        <p>{{ request.user.username }}</p>
+        <a href="{% url 'logout' %}" class="exit">
+            {% include "icons/exit.html" %}
+        </a>
+    </div>
+</header>

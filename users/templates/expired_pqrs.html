@@ -1,0 +1,9 @@
+{% extends "baseUsers.html" %}
+
+{% block datas %}
+    <h2>Listado de PQRS Expiradas</h2>
+    {% for pqr in pqrs %}
+        <p>{{pqr.typePQRS}} - {{pqr.userCreated}} - {{pqr.timeResponse}}</p>
+    {% endfor %}
+    {% include "pagination.html" with page=pqrs %}
+{% endblock datas %}

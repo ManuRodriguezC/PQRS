@@ -1,0 +1,11 @@
+{% extends "baseUsers.html" %}
+
+{% block datas %}
+    <h2>Listado de PQRS Activas</h2>
+    <ul>
+    {% for pqr in pqrs %}
+        <li><a href="{% url 'findpqrs' pqr.id %}">{{pqr.typePQRS}} - {{pqr.asociado}} - {{pqr.userCreated}} - {{pqr.timeResponse}}</a></li>
+    {% endfor %}
+    </ul>
+    {% include "pagination.html" with page=pqrs %}
+{% endblock datas %}

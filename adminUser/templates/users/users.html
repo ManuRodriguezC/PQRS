@@ -1,0 +1,47 @@
+{% extends "baseUsers.html" %}
+{% load static %}
+
+{% block datas %}
+    <section class="users">
+        <div>
+            <div class="top-areas">
+                <h2>Usuarios Registrados</h2>
+            </div>
+            <table>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Area</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Correo</th>
+                    <th>Staff</th>
+                    <th></th>
+                </tr>
+                {% for user in users %}
+                <tr class="datas-areas">
+                    {% if user.area %}
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.area }}</td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.is_staff }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div>
+            <h2>Crear nuevo Usuario</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{formUser.as_p}}
+                <button type="submit">
+                    Crear Usuario
+                </button>
+            </form>
+        </div>
+    </section>
+
+{% endblock datas %}

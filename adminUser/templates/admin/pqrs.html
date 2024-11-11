@@ -1,0 +1,49 @@
+{% extends "baseUsers.html" %}
+{% load static %}
+
+{% block datas %}
+    <section class="areas">
+        <div>
+            <div class="top-areas">
+                <h2>Lista de Tipos de PQRS y area de solución</h2>
+            </div>
+            <table>
+                <tr>
+                    <th>PQRS</th>
+                    <th>Nombre PQRS</th>
+                    <th>Tiempo Maximo de Respuesta</th>
+                    <th>Area de PQRS</th>
+                    <th></th>
+                </tr>
+                {% for pqr in pqrs %}
+                <tr class="datas-areas">
+                    <td>{{forloop.counter}}</td>
+                    <td>{{pqr.name}}</td>
+                    <td>{{pqr.timeExecute}}</td>
+                    <td>{{pqr.area_redirect}}</td>
+                    <td>
+                        <a
+                            href="{% url 'deleteTypePQRS' pqr.id %}"
+                            onclick="return confirm('Esta seguro de eliminar este PQRS?')"
+                        >
+                            {% include "icons/delete.html" %}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div>
+            <h2>Nueva Tipo de PQRS</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit">
+                    Crear PQRS
+                </button>
+            </form>
+        </div>
+    </section>
+
+{% endblock datas %}

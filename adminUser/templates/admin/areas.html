@@ -1,0 +1,45 @@
+{% extends "baseUsers.html" %}
+{% load static %}
+
+{% block datas %}
+    <section class="areas">
+        <div>
+            <div class="top-areas">
+                <h2>Areas de Control y Servicio</h2>
+            </div>
+            <table>
+                <tr>
+                    <th>Area</th>
+                    <th>Nombre Area</th>
+                    <th></th>
+                </tr>
+                {% for area in areas %}
+                <tr class="datas-areas ">
+                    <td>{{forloop.counter}}</td>
+                    <td>{{area.name}}</td>
+                    <td>
+                        <a
+                            href="{% url 'deleteArea' area.id %}"
+                            onclick="return confirm('Esta seguro de eliminar esta Area?')"
+                        >
+                            {% include "icons/delete.html" %}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div>
+            <h2>Nueva Area de Control y Servicio</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit">
+                    Crear Area
+                </button>
+            </form>
+        </div>
+    </section>
+
+{% endblock datas %}

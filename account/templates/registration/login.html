@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link href="{% static "css/login.css" %}" rel="stylesheet">
+{% endblock styles %}
+
+{% block title %}Inicio de Sesion{% endblock title %}
+
+{% block content %}
+    <div class="cont">
+        <div class="container">
+            <h3 class="heading">Iniciar Sesión</h3>
+            {% if form.errors %}
+                <p>
+                    Su usuario o contraseña no son correctos.
+                    Intente de nuevo.
+                </p>
+            {% endif %}
+
+            <form class="form" action="{% url 'login' %}" method="post">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}" />
+                <span class="forgot-password"><a href="{% url "password_reset" %}">Olvidaste tu contraseña?</a></span>
+                <input class="login-button" type="submit" value="Iniciar Sesion">
+            </form>
+            <span class="agreement">Ingresa tus credenciales</span>
+        </div>
+    </div>
+{% endblock content %}

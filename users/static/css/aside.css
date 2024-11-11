@@ -1,0 +1,74 @@
+aside {
+    width: 20vw;
+    height: 100vh; /* Asegura que cubre toda la altura de la pantalla */
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: rgb(27, 27, 27);
+    padding: 5px; /* Añade padding interno para dar espacio en la parte superior */
+    box-sizing: border-box; /* Incluye el padding dentro del ancho total */
+}
+
+.top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+}
+
+.version {
+    font-size: 14px;
+    color: #bbb;
+}
+
+.top-user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-name {
+    color: white;
+    font-size: 20px;
+    margin: 0;
+}
+
+.sub-title {
+    color: #bbb;
+}
+
+.general {
+    padding: 30px 20px;
+}
+
+.admin {
+    padding: 0px 20px;
+}
+
+.general-cases {
+    color: #fff;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cases {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 10px;
+    align-items: center;
+    padding: 0px 10px;
+    transition: all .2s ease-in;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+}
+
+.cases:hover {
+    background-color: rgb(60, 60, 60);
+}

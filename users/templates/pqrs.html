@@ -6,14 +6,28 @@
     <p>Descripcion: {{pqrs.description}}</p>
     <p>Hora Generacion: {{pqrs.created}}</p>
     <p>Hora Vencimiento: {{pqrs.timeResponse}}</p>
-    {% comment %} <iframe src="http://127.0.0.1:8000/media/{{ pqrs.file }}" width="600" height="400" type="application/pdf"> {% endcomment %}
-    <iframe src="http://127.0.0.1:8000/media/files/EXAMEN_Medico.pdf" width="600" height="400" type="application/pdf">
-        Este navegador no soporta iframes o el archivo PDF no se puede mostrar.
-    </iframe>
-          
-    <embed src="http://127.0.0.1:8000/media/files/EXAMEN_Medico.pdf" width="600" height="400" type="application/pdf">
-        Archivo anexado en la creacion.
-    </embed>
-          
+    {% if pqrs.image %}
+        <img width="200" height="200" src="{{pqrs.image.url}}" alt=""/>
+    {% endif %}
+    <ul>
+        {% if pqrs.file %}
+            <li>Archivo adjunto al crear la PQRS: <a href="{{pqrs.file.url}}" target="_blank">Link</a></li>
+        {% endif %}
+    </ul>
+
+    <h3>Comentarios o respuestas adjuntadas</h3>
+    <ul>
+        {% for comment in comments %}
+            <li>{{comment.coment}} - {{comment.created_by}}</li>
+        {% endfor %}
+    </ul>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{formComment.as_p}}
+        <button type="submit">
+            Agregar Comentario
+        </button>
+    </form>
 
 {% endblock datas %}

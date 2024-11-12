@@ -8,5 +8,5 @@ urlpatterns = [
     path('crearPQRS/', createdPQRS, name="createdpqrs"),
     path('pqrs-cerradas/', closePQRS, name="closedpqrs"),
     path('pqrs-expiradas/', expiredPQRS, name="expiredpqrs"),
-    path('pqrs/<int:id>/', pqrs, name="findpqrs"),
+    path('pqrs_abierta/<int:id>/', pqrs, name="findpqrs"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

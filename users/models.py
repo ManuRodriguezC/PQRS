@@ -22,19 +22,26 @@ class PQRS(models.Model):
     timeResponse = models.DateTimeField(null=True, blank=True)
     userCreated = models.CharField(max_length=100)
     status = models.CharField(max_length=100, default="Open")
-    
+
     objects = PQRSManager()
-    
+
     def save(self, *args, **kwargs):
         if self.typePQRS and not self.timeResponse:
             dateEnd = datetime.now() + timedelta(hours=self.typePQRS.timeExecute)
             self.timeResponse = dateEnd
         super(PQRS, self).save(*args, **kwargs)
-    
+
     def check_time_response(self):
         if self.timeResponse and self.timeResponse < timezone.now() and self.status == "Open":
             self.status = "Expired"
             self.save()
-    
+
     class Meta:
         ordering = ['-created']
+
+class Commets(models.Model):
+    """"""
+    pqrs = models.ForeignKey(PQRS, on_delete=models.SET_NULL, null=True, blank=True)
+    coment = models.CharField(max_length=1000)
+    created_by = models.CharField(max_length=200)
+    created = models.DateTimeField(auto_now_add=True)

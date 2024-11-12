@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    min-height: 100vh;
+    display: flex;
+}
+
+main {
+    margin-left: 20vw;  /* Espacio suficiente para el aside fijo */
+    padding: 20px;      /* Añade algo de padding para evitar que el contenido toque los bordes */
+    width: 80vw;
+    min-height: 500px;
+    background-color: #fafafa;
+    overflow-y: auto;   /* Activa el scroll vertical si el contenido supera el área visible */
+}
+
+.separator {
+    height: 2px;
+    width: 100%;
+    background-color: rgb(32, 33, 33);
+    margin: 10px 0px;
+}

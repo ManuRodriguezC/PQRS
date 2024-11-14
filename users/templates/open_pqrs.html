@@ -1,11 +1,37 @@
-{% extends "baseUsers.html" %}
+{% extends "baseUsers.html" %} {% block datas %}
+  <form
+    method="POST"
+    class="inline-flex flex-row gap-5 justify-around border-[2px] border-gray-300 px-5 rounded-full shadow-2xl"
+  >
+    {% csrf_token %} {{ formSearch.as_p }}
+    <button type="submit" class="hover:scale-110 transition-all duration-200">
+      {% include "icons/search.html" %}
+    </button>
+  </form>
 
-{% block datas %}
-    <h2>Listado de PQRS Activas</h2>
-    <ul>
+<h2 class="mt-7 mb-4 text-2xl font-semibold text-gray-700">Listado de PQRS Activas</h2>
+
+<div class="w-full border-2 bg-white border-gray-500 rounded-lg">
+  <ul class="flex flex-row text-xl font-semibold bg-gray-300 px-4 py-2 rounded-lg text-center">
+    <li class="w-1/5">Asociado</li>
+    <li class="w-1/5">Solicitud</li>
+    <li class="w-1/5">Creado por</li>
+    <li class="w-1/5">Fecha Creacion</li>
+    <li class="w-1/5">Fecha Cierre</li>
+  </ul>
+
+  <div class="flex flex-col gap-2 py-2">
     {% for pqr in pqrs %}
-        <li><a href="{% url 'findpqrs' pqr.id %}">{{pqr.typePQRS}} - {{pqr.asociado}} - {{pqr.userCreated}} - {{pqr.timeResponse}}</a></li>
+    <a href="{% url 'findpqrs' pqr.id %}" class="">
+      <ul class="flex flex-row gap-2 py-2 bg-blue-100/80 rounded-lg hover:bg-blue-200 transition-colors duration-200">
+        <li class="w-1/5 text-center">{{pqr.asociado}}</li>
+        <li class="w-1/5 text-center">{{pqr.typePQRS}}</li>
+        <li class="w-1/5 text-center">{{pqr.userCreated}}</li>
+        <li class="w-1/5">{{pqr.created}}</li>
+        <li class="w-1/5">{{pqr.timeResponse}}</li>
+      </ul>
+    </a>
     {% endfor %}
-    </ul>
-    {% include "pagination.html" with page=pqrs %}
-{% endblock datas %}
+  </div>
+</div>
+{% include "pagination.html" with page=pqrs %} {% endblock datas %}

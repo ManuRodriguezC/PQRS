@@ -19,24 +19,3 @@
     align-items: center;
 }
 
-table {
-    border: 1px solid rgb(10, 10, 10);
-    border-radius: 4px;
-    margin-top: 20px;
-}
-
-th {
-    font-size: 20px;
-    padding: 4px 15px;
-}
-
-.datas-areas {
-    border: 1px solid black;
-    background-color: rgb(238, 245, 255);
-    text-align: center;
-}
-
-.datas-areas td {
-    padding: 4px 30px;
-    font-size: 17px;
-}

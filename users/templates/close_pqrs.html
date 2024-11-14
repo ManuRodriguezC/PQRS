@@ -1,9 +1,19 @@
-{% extends "baseUsers.html" %}
-
-{% block datas %}
-    <h2>Listado de PQRS Cerradas</h2>
-    {% for pqr in pqrs %}
-        <p>{{pqr.typePQRS}} - {{pqr.userCreated}} - {{pqr.timeResponse}}</p>
-    {% endfor %}
-    {% include "pagination.html" with page=pqrs %}
-{% endblock datas %}
+{% extends "baseUsers.html" %} {% block datas %}
+<form
+  method="POST"
+  class="inline-flex flex-row gap-5 justify-around border-[2px] border-gray-300 px-5 rounded-full shadow-2xl"
+>
+  {% csrf_token %} {{ formSearch.as_p }}
+  <button type="submit" class="hover:scale-110 transition-all duration-200">
+    {% include "icons/search.html" %}
+  </button>
+</form>
+<h2>Listado de PQRS Cerradas</h2>
+{% for pqr in pqrs %}
+<li>
+  <a href="{% url 'findpqrs' pqr.id %}"
+    >{{pqr.typePQRS}} - {{pqr.asociado}} - {{pqr.userCreated}} -
+    {{pqr.closed}}</a
+  >
+</li>
+{% endfor %} {% include "pagination.html" with page=pqrs %} {% endblock datas %}

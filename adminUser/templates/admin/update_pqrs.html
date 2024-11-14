@@ -1,0 +1,12 @@
+{% extends "baseUsers.html" %}
+
+{% block datas %}
+    <h2>Actualizar PQRS</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">
+            Actualizar
+        </button>
+    </form>
+{% endblock datas %}

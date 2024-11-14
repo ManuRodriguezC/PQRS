@@ -1,70 +1,91 @@
 {% extends "base.html" %}
 
-{% block title %}PQRS Cootratiempo{% endblock title %}
-
-{% block styles %}
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/baseUser.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/aside.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/areas.css' %}"/>
-{% endblock styles %}
-
 {% block content %}
     {% load django_browser_reload %}
-    <aside>
-        <div class="top">
-            <div class="top-user">
-                <p class="user-name">{{ request.user.username }}</p>
-                {% include "icons/user.html" %}
+    <body class="flex w-full h-screen">
+        <aside class="w-1/5 bg-gray-950 text-white p-4">
+            <div class="flex flex-row justify-between items-center p-3">
+                <div class="flex flex-row justify-center items-center">
+                    <p class="text-xl text-white">{{ request.user.username }}</p>
+                    {% include "icons/user.html" %}
+                </div>
+                <p class="text-sm text-gray-400">pqrs v.1</p>
             </div>
-            <p class="version">pqrs v.1</p>
-        </div>
-    
-        <div class="general">
-            <p class="sub-title">General</p>
-            <div class="general-cases">
-                <a href="{% url 'home' %}" class="cases">
-                    {% include "icons/openCases.html" %}
-                    <p>Casos Abiertos</p>
-                </a>
-                <a href="{% url 'closedpqrs' %}" class="cases">
-                    {% include "icons/closeCases.html" %}
-                    <p>Casos Cerrados</p>
-                </a>
-                <a href="{% url 'expiredpqrs' %}" class="cases">
-                    {% include "icons/venCases.html" %}
-                    <p>Casos Casos Vencidos</p>
-                </a>
-            </div>
-        </div>
-
-        {% if request.user.is_staff %}
-        <div class="admin">
-            <p class="sub-title">Administrador</p>
-            <div class="general-cases">
-                <a href="{% url 'areas' %}" class="cases">
-                    {% include "icons/openCases.html" %}
-                    <p>Areas</p>
-                </a>
-                <a href="{% url 'typesPQRS' %}" class="cases">
-                    {% include "icons/closeCases.html" %}
-                    <p>Tipos PQRS</p>
-                </a>
-                <a href="{% url 'users' %}" class="cases">
-                    {% include "icons/venCases.html" %}
-                    <p>Usuarios</p>
-                </a>
-            </div>
-        </div>
-        {% endif %}
-
-    </aside>
-
-    <main>
-        {% include "header.html" %}
-        <div class="separator"></div>
-        {% block datas %}
         
-        {% endblock datas %}
-    </main>
+            <div class="flex flex-col px-5 py-7">
+                <p class="text-base text-gray-400">General</p>
+                <div class="text-base flex flex-col gap-4 mt-5">
+                    <a 
+                      href="{% url 'home' %}"
+                      class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
+                      border-[1px] border-gray-500 hover:bg-gray-900">
+                        {% include "icons/openCases.html" %}
+                        <p>Casos Abiertos</p>
+                    </a>
+                    <a 
+                      href="{% url 'closedpqrs' %}"
+                      class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
+                      border-[1px] border-gray-500 hover:bg-gray-900">
+                        {% include "icons/closeCases.html" %}
+                        <p>Casos Cerrados</p>
+                    </a>
+                    <a 
+                      href="{% url 'expiredpqrs' %}"
+                      class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
+                      border-[1px] border-gray-500 hover:bg-gray-900">
+                        {% include "icons/venCases.html" %}
+                        <p>Casos Casos Vencidos</p>
+                    </a>
+                </div>
+            </div>
+
+            {% if request.user.is_staff %}
+            <div class="flex flex-col px-5 py-7">
+                <p class="text-base text-gray-400">Administrador</p>
+                <div class="text-base flex flex-col gap-4 mt-5">
+                    <a 
+                      href="{% url 'areas' %}"
+                      class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
+                      border-[1px] border-gray-500 hover:bg-gray-900">
+                        {% include "icons/openCases.html" %}
+                        <p>Areas</p>
+                    </a>
+                    <a 
+                      href="{% url 'typesPQRS' %}"
+                      class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
+                      border-[1px] border-gray-500 hover:bg-gray-900">
+                        {% include "icons/closeCases.html" %}
+                        <p>Tipos PQRS</p>
+                    </a>
+                    <a 
+                      href="{% url 'users' %}"
+                      class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
+                      border-[1px] border-gray-500 hover:bg-gray-900">
+                        {% include "icons/venCases.html" %}
+                        <p>Usuarios</p>
+                    </a>
+                    <a 
+                      href="{% url 'statistics' %}"
+                      class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
+                      border-[1px] border-gray-500 hover:bg-gray-900">
+                        {% include "icons/venCases.html" %}
+                        <p>Estadisticas</p>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+        </aside>
+
+        <main class="w-4/5 bg-gray-200">
+            {% include "header.html" %}
+            <div class="separator"></div>
+            <div class="px-10 py-5">
+              {% block datas %}
+              
+              {% endblock datas %}
+            </div>
+        </main>
+    </body>
+
 {% endblock content %}

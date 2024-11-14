@@ -7,7 +7,7 @@ body {
 }
 
 main {
-    margin-left: 20vw;  /* Espacio suficiente para el aside fijo */
+    margin-left: 10vw;  /* Espacio suficiente para el aside fijo */
     padding: 20px;      /* Añade algo de padding para evitar que el contenido toque los bordes */
     width: 80vw;
     min-height: 500px;

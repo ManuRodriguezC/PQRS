@@ -22,19 +22,27 @@ class PQRS(models.Model):
     timeResponse = models.DateTimeField(null=True, blank=True)
     userCreated = models.CharField(max_length=100)
     status = models.CharField(max_length=100, default="Open")
+    close_by = models.CharField(max_length=100, null=True, blank=True)
+    closed = models.DateTimeField(null=True, blank=True)
 
     objects = PQRSManager()
 
     def save(self, *args, **kwargs):
         if self.typePQRS and not self.timeResponse:
             dateEnd = datetime.now() + timedelta(hours=self.typePQRS.timeExecute)
-            self.timeResponse = dateEnd
+            self.timeResponse = timezone.make_aware(dateEnd, timezone.get_current_timezone())
         super(PQRS, self).save(*args, **kwargs)
 
     def check_time_response(self):
         if self.timeResponse and self.timeResponse < timezone.now() and self.status == "Open":
             self.status = "Expired"
             self.save()
+
+    def closePQRS(self, user, *args, **kwargs):
+        self.status = "Close"
+        self.close_by = user
+        self.closed = datetime.now()
+        super(PQRS, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['-created']
@@ -43,5 +51,7 @@ class Commets(models.Model):
     """"""
     pqrs = models.ForeignKey(PQRS, on_delete=models.SET_NULL, null=True, blank=True)
     coment = models.CharField(max_length=1000)
+    file_add = models.FileField(null=True, blank=True, upload_to='files/')
+    image_add = models.ImageField(null=True, blank=True, upload_to='images/')
     created_by = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)

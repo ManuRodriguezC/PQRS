@@ -1,0 +1,23 @@
+{% extends "baseUsers.html" %}
+
+{% block datas %}
+    <h3>Estadisticas Usuarios</h3>
+    <table>
+        <tr>
+            <th>Usuario</th>
+            <th>Creadas</th>
+            <th>Abiertas</th>
+            <th>Finalizadas</th>
+            <th>Vencidas</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.user }}</td>
+            <td>{{ user.pqrsCreated }}</td>
+            <td>{{ user.pqrsOpen }}</td>
+            <td>{{ user.pqrsClose }}</td>
+            <td>{{ user.pqrsExpired }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock datas %}

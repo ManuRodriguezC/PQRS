@@ -1,33 +1,61 @@
 {% extends "baseUsers.html" %}
 
 {% block datas %}
-    <p class="text-5xl">Documento Asociado: {{pqrs.asociado}}</p>
-    <p>Tipo de Solicitud: {{pqrs.typePQRS}}</p>
-    <p>Descripcion: {{pqrs.description}}</p>
-    <p>Hora Generacion: {{pqrs.created}}</p>
-    <p>Hora Vencimiento: {{pqrs.timeResponse}}</p>
-    {% if pqrs.image %}
-        <img width="200" height="200" src="{{pqrs.image.url}}" alt=""/>
-    {% endif %}
-    <ul>
-        {% if pqrs.file %}
-            <li>Archivo adjunto al crear la PQRS: <a href="{{pqrs.file.url}}" target="_blank">Link</a></li>
+    <section class="flex flex-col">
+        <div class="">
+            <div class="flex flex-row justify-between">
+                <div>
+                    <p class="text-2xl text-red-400">Asociado: {{pqrs.asociado}}</p>
+                    <p class="text-xl text-blue-300">Tipo de Solicitud: {{pqrs.typePQRS}}</p>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <p>Hora Generacion: {{pqrs.created}}</p>
+                    <p>Hora Vencimiento: {{pqrs.timeResponse}}</p>
+                    {% if pqrs.status == "Open" %}
+                        <a
+                            class="px-4 py-2 w-40 rounded-xl text-center bg-red-600"
+                            onclick="return confirm('Esta seguro de finalizar esta solicitud?')"
+                            href="{% url 'closepqrs' pqrs.id %}">
+                            Cerrar solicitud
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex flex-row justify-between">
+                <p class="text-3xl">Descripcion: {{pqrs.description}}</p>
+                {% if pqrs.image %}
+                    <img class="w-32 h-32 object-cover" src="{{pqrs.image.url}}" alt=""/>
+                {% endif %}
+            </div>
+                <ul>
+                    {% if pqrs.file %}
+                    <li>Archivo adjunto al crear la PQRS: <a href="{{pqrs.file.url}}" target="_blank">Link</a></li>
+                    {% endif %}
+                </ul>
+        </div>
+        
+        <h3>Comentarios o respuestas adjuntadas</h3>
+        <ul>
+            {% for comment in comments %}
+            <li class="flex flex-row">
+                <p>{{comment.coment}} - {{comment.created_by}}</p>
+                {% if comment.image_add %}
+                <img class="w-40 h-40 object-cover" src="{{comment.image_add.url}}"/>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        
+        {% if pqrs.status == "Open" %}
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{formComment.as_p}}
+                <button type="submit">
+                    Agregar Comentario
+                </button>
+            </form>
         {% endif %}
-    </ul>
 
-    <h3>Comentarios o respuestas adjuntadas</h3>
-    <ul>
-        {% for comment in comments %}
-            <li>{{comment.coment}} - {{comment.created_by}}</li>
-        {% endfor %}
-    </ul>
-
-    <form method="POST">
-        {% csrf_token %}
-        {{formComment.as_p}}
-        <button type="submit">
-            Agregar Comentario
-        </button>
-    </form>
+    </section>
 
 {% endblock datas %}

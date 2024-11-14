@@ -7,3 +7,6 @@ class CustumUser(AbstractUser):
     
     def __str__(self):
         return self.username
+    
+    def currentArea(self):
+        return self.area

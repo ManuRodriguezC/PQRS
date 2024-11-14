@@ -6,5 +6,8 @@ urlpatterns = [
     path('deleteArea/<int:id>/', deleteArea, name="deleteArea"),
     path('tiposPQRS/', typesPQRSAll, name="typesPQRS"),
     path('deleteTypePQRS/<int:id>/', deleteTypePQRS, name="deleteTypePQRS"),
-    path('users/', users, name="users")
+    path('users/', users, name="users"),
+    path('actualizar-usuario/<int:id>', updateUser, name="updateUser"),
+    path('actualizar-pqrs/<int:id>/', updateTypePQRS, name="updatePQRS"),
+    path('estadisticas-usuarios', statistics, name="statistics")
 ]

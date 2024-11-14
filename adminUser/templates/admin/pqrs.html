@@ -22,6 +22,11 @@
                     <td>{{pqr.timeExecute}}</td>
                     <td>{{pqr.area_redirect}}</td>
                     <td>
+                        <a href="{% url 'updatePQRS' pqr.id %}">
+                            {% include "icons/edit.html" %}
+                        </a>
+                    </td>
+                    <td>
                         <a
                             href="{% url 'deleteTypePQRS' pqr.id %}"
                             onclick="return confirm('Esta seguro de eliminar este PQRS?')"

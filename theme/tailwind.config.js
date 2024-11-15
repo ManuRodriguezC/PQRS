@@ -6,7 +6,8 @@ module.exports = {
     './static/js/**/*.js',   // Si tienes archivos JavaScript con clases de Tailwind
   ],
   theme: {
-    extend: {},
+    extend: {
+    },
   },
   plugins: [],
 }

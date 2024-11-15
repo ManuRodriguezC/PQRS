@@ -6,11 +6,48 @@
         <h2>Crear PQRS</h2>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{form.as_p}}
-            <button type="submit">
-                Crear PQRS
-            </button>
+            {{ pqrs_form.as_p }}
+            
+            <h3>Archivos:</h3>
+            {{ file_formset.management_form }}
+            <div id="file-forms">
+                {% for form in file_formset %}
+                    <div class="form-row">
+                        {{ form.as_p }}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-file-form">Agregar archivo</button>
+            <br>
+            <button type="submit">Crear PQRS</button>
         </form>
     </section>
+
+    <script>
+        document.getElementById('add-file-form').onclick = function() {
+            // Obtener el número de formularios ya generados
+            var formIdx = document.querySelectorAll('.form-row').length;
+    
+            // Crear un nuevo formulario dinámico
+            var newForm = document.createElement('div');
+    
+            // Obtener el HTML del formulario vacío de Django y reemplazar el __prefix__ por el índice adecuado
+            var newFormHtml = `{{ file_formset.empty_form.as_p|escapejs }}`;
+    
+            // Reemplazar __prefix__ con el índice adecuado
+            newFormHtml = newFormHtml.replace(/__prefix__/g, formIdx);
+    
+            // Asignamos el nuevo formulario al contenedor
+            newForm.innerHTML = `<div class="form-row">${newFormHtml}</div>`;
+    
+            // Agregar el nuevo formulario al contenedor de formularios
+            document.getElementById('file-forms').appendChild(newForm);
+    
+            // Incrementamos el campo TOTAL_FORMS en el management_form
+            document.querySelector('[name="files_set-TOTAL_FORMS"]').value = formIdx + 1;
+        };
+    </script>
+    
+    
 
 {% endblock datas %}

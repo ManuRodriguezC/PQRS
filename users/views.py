@@ -3,29 +3,29 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage
 from .models import PQRS, Commets
 from django.http import HttpResponseRedirect, Http404
-from .forms import PQRSCreateForm, CommentForm, SearchForm
+from .forms import PQRSCreateForm, CommentForm, SearchForm, FileFormSet
 from django.db.models import Q
 
 @login_required
 def openPQRS(request):
     formSearch = SearchForm()
     userType = request.user
-    userArea = userType.area
 
     if userType.is_staff:
         openPQRS = PQRS.objects.filter(status="Open")
     else:
-        openPQRS = PQRS.objects.filter(
-            Q(userCreated=userType) | Q(typePQRS__area_redirect=userArea),
-            status="Open"
-        ).distinct()
+        openPQRS = PQRS.objects.filter(typePQRS__area_redirect=userType.area, status="Open")
 
     if request.method == "POST":
         formSearch = SearchForm(request.POST)
         if formSearch.is_valid():
             search = formSearch.cleaned_data.get('search')
             if search:
-                openPQRS = openPQRS.filter(asociado=search)
+                try:
+                    search_int = int(search)
+                    openPQRS = openPQRS.filter(asociado=search_int)
+                except ValueError:
+                    openPQRS = openPQRS.filter(num=search)
                 formSearch = SearchForm()
 
     paginator = Paginator(openPQRS, 10)
@@ -43,9 +43,8 @@ def closePQRS(request):
     userType = request.user
     if userType.is_staff:
         closePQRS = PQRS.objects.filter(status="Close")
-    else:    
-        closePQRS = PQRS.objects.filter(
-            Q(userCreated=userType) | Q(typePQRS__area_redirect=userType.area), status="Close")
+    else:
+        closePQRS = PQRS.objects.filter(typePQRS__area_redirect=userType.area, status="Close")
     
     if request.method == 'POST':
         formSearch = SearchForm(request.POST)
@@ -68,9 +67,8 @@ def expiredPQRS(request):
     userType = request.user
     if userType.is_staff:
         expirePQRS = PQRS.objects.filter(status="Expired")
-    else:    
-        expirePQRS = PQRS.objects.filter(
-            Q(userCreated=userType) | Q(typePQRS__area_redirect=userType.area), status="Open")
+    else:
+        expirePQRS = PQRS.objects.filter(typePQRS__area_redirect=userType.area, status="Expired")
         
     if request.method == 'POST':
         formSearch = SearchForm(request.POST)
@@ -89,25 +87,36 @@ def expiredPQRS(request):
 
 @login_required
 def createdPQRS(request):
-    form = PQRSCreateForm()
     if request.method == 'POST':
-        form = PQRSCreateForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save(user=request.user)
+        pqrs_form = PQRSCreateForm(request.POST)
+        file_formset = FileFormSet(request.POST, request.FILES)
+        
+        if pqrs_form.is_valid() and file_formset.is_valid():
+            pqrs_instance = pqrs_form.save(user=request.user)
+            for form in file_formset:
+                if form.is_valid() and not form.cleaned_data.get('DELETE'):
+                    file = form.save(commit=False)
+                    file.pqrs = pqrs_instance
+                    file.save()
+                else:
+                    print(f"Form {form.prefix} errors: {form.errors}")
+                    
             return redirect('home')
-    return render(request, 'createdpqrs.html', {'form': form})
+    else:
+        pqrs_form = PQRSCreateForm()
+        file_formset = FileFormSet()
+    return render(request, 'createdpqrs.html', {'pqrs_form': pqrs_form, 'file_formset': file_formset})
 
 @login_required
-def pqrs(request, id):
+def pqrs(request, num):
     formComment = CommentForm()
+    
     try:
-        find_pqrs = get_object_or_404(
-            PQRS.objects.filter(
-                Q(userCreated=request.user.username) | Q(typePQRS__area_redirect=request.user.area),
-                id=id
-            )
-        )
+        find_pqrs = get_object_or_404(PQRS.objects.filter(num=num))
     except Http404:
+        return redirect("home")
+    
+    if find_pqrs.typePQRS.area_redirect != request.user.area and not request.user.is_staff:
         return redirect("home")
 
     comments = Commets.objects.filter(pqrs=find_pqrs)
@@ -116,7 +125,7 @@ def pqrs(request, id):
         formComment = CommentForm(request.POST, request.FILES)
         if formComment.is_valid():
             formComment.save(user=request.user, pqrs=find_pqrs)
-            return redirect('findpqrs', id=id)
+            return redirect('findpqrs', num=num)
 
     return render(request, 'pqrs.html', {
         'pqrs': find_pqrs,
@@ -125,8 +134,8 @@ def pqrs(request, id):
     })
 
 @login_required
-def closedPQRS(request, id):
-    pqrs = get_object_or_404(PQRS, id=id)
+def closedPQRS(request, num):
+    pqrs = get_object_or_404(PQRS, num=num)
     try:
         pqrs.closePQRS(request.user.username)
         return redirect('home')

@@ -12,7 +12,11 @@
     {% include "icons/new.html" %} Nueva PQRS
   </a>
   <div class="flex flex-row justify-between items-center gap-4">
-    <p class="font-semibold text-xl">{{ request.user.username }}</p>
+    <p class="font-semibold text-xl">
+      {% if request.user.area %}
+      {{ request.user.area}} - 
+      {% endif %}
+      {{ request.user.username }}</p>
     <a href="{% url 'logout' %}" class="exit">
       {% include "icons/exit.html" %}
     </a>

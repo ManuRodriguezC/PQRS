@@ -8,3 +8,7 @@ class TypePQRSAdmin(admin.ModelAdmin):
 @admin.register(Commets)
 class CommentsAdmin(admin.ModelAdmin):
     list_display = ['pqrs', 'coment', 'created_by']
+
+@admin.register(Files)
+class FilesAdmin(admin.ModelAdmin):
+    list_display = ['pqrs', 'file', 'created']

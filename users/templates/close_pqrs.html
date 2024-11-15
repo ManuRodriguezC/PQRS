@@ -1,19 +1,32 @@
 {% extends "baseUsers.html" %} {% block datas %}
-<form
-  method="POST"
-  class="inline-flex flex-row gap-5 justify-around border-[2px] border-gray-300 px-5 rounded-full shadow-2xl"
->
-  {% csrf_token %} {{ formSearch.as_p }}
-  <button type="submit" class="hover:scale-110 transition-all duration-200">
-    {% include "icons/search.html" %}
-  </button>
-</form>
-<h2>Listado de PQRS Cerradas</h2>
-{% for pqr in pqrs %}
-<li>
-  <a href="{% url 'findpqrs' pqr.id %}"
-    >{{pqr.typePQRS}} - {{pqr.asociado}} - {{pqr.userCreated}} -
-    {{pqr.closed}}</a
-  >
-</li>
-{% endfor %} {% include "pagination.html" with page=pqrs %} {% endblock datas %}
+
+{% include "search.html" %}
+
+<h2 class="my-4 text-2xl font-semibold text-gray-700">Listado de PQRS Cerradas</h2>
+
+<div class="w-full max-h-[85%] border-2 bg-white border-gray-500 rounded-lg overflow-y-auto">
+  <ul class="flex flex-row text-xl font-semibold bg-gray-300 px-4 py-2 rounded-lg text-center">
+    <li class="w-1/6">Numero</li>
+    <li class="w-1/6">Nombre</li>
+    <li class="w-1/6">Documento</li>
+    <li class="w-1/6">Solicitud</li>
+    <li class="w-1/6">Creado por</li>
+    <li class="w-1/6">Fecha Cierre</li>
+  </ul>
+
+  <div class="flex flex-col gap-2 py-2">
+    {% for pqr in pqrs %}
+    <a href="{% url 'findpqrs' pqr.num %}" class="">
+      <ul class="flex flex-row gap-2 py-2 bg-red-100/80 rounded-lg hover:bg-red-200 transition-colors duration-200 px-2">
+        <li class="w-1/6 flex text-center justify-center items-center">{{pqr.num}}</li>
+        <li class="w-1/6 flex text-center justify-center items-center">{{pqr.name}}</li>
+        <li class="w-1/6 flex text-center justify-center items-center">{{pqr.asociado}}</li>
+        <li class="w-1/6 flex text-center justify-center items-center">{{pqr.typePQRS}}</li>
+        <li class="w-1/6 flex text-center justify-center items-center">{{pqr.userCreated}}</li>
+        <li class="w-1/6 flex text-center justify-center items-center">{{pqr.timeResponse}}</li>
+      </ul>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% include "pagination.html" with page=pqrs %} {% endblock datas %}

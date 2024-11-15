@@ -1,0 +1,9 @@
+<form
+    method="POST"
+    class="inline-flex flex-row gap-5 justify-around px-5 rounded-full"
+    >
+    {% csrf_token %} {{ formSearch.as_p }}
+    <button type="submit" class="hover:scale-110 transition-all duration-200">
+    {% include "icons/search.html" %}
+    </button>
+</form>

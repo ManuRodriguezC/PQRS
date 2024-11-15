@@ -13,11 +13,13 @@ class PQRSManager(models.Manager):
 
 class PQRS(models.Model):
     """"""
+    num = models.CharField(max_length=20)
     typePQRS = models.ForeignKey(TypesPQRS, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
     asociado = models.IntegerField(null=True, blank=True)
+    email = models.EmailField()
+    phone = models.IntegerField()
     description = models.CharField(max_length=1000)
-    file = models.FileField(upload_to='files/', null=True, blank=True)
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     timeResponse = models.DateTimeField(null=True, blank=True)
     userCreated = models.CharField(max_length=100)
@@ -31,6 +33,11 @@ class PQRS(models.Model):
         if self.typePQRS and not self.timeResponse:
             dateEnd = datetime.now() + timedelta(hours=self.typePQRS.timeExecute)
             self.timeResponse = timezone.make_aware(dateEnd, timezone.get_current_timezone())
+        
+        if not self.num:
+            super().save(*args, **kwargs)
+            self.num = f"CTT10{str(self.id).rjust(7, '0')}"
+            kwargs['force_insert'] = False
         super(PQRS, self).save(*args, **kwargs)
 
     def check_time_response(self):
@@ -46,6 +53,12 @@ class PQRS(models.Model):
 
     class Meta:
         ordering = ['-created']
+
+class Files(models.Model):
+    """"""
+    pqrs = models.ForeignKey(PQRS, on_delete=models.SET_NULL, null=True, blank=True)
+    file = models.FileField(null=True, blank=True, upload_to='files/')
+    created = models.DateTimeField(auto_now_add=True)
 
 class Commets(models.Model):
     """"""

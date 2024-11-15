@@ -2,53 +2,56 @@
 <section class="">
   <div>
     <div class="top-areas">
-      <h2>Usuarios Registrados</h2>
+      <h2 class="text-3xl text-gray-700 font-semibold">Usuarios Registrados</h2>
     </div>
-    <table class="w-full flex flex-col text-sm">
-      <tr class="flex flex-row justify-between">
-        <th class="w-[13.5%]">Usuario</th>
-        <th class="w-[13.5%]">Area</th>
-        <th class="w-[13.5%]">Nombre</th>
-        <th class="w-[13.5%]">Correo</th>
-        <th class="w-[13.5%]">Staff</th>
-        <th class="w-[13.5%]">Estado</th>
-        <th class="w-[13.5%]"></th>
-      </tr>
+    <div class="w-full flex flex-col border-2 border-gray-500 rounded-lg shadow-lg text-sm mt-4">
+      <ul class="flex flex-row text-base font-semibold bg-gray-300 px-2 py-2 rounded-lg">
+        <li class="w-[15%] text-center">Usuario</li>
+        <li class="w-[15%] text-center">Area</li>
+        <li class="w-[25%] text-center">Nombre</li>
+        <li class="w-[20%] text-center">Correo</li>
+        <li class="w-[10%]">Staff</li>
+        <li class="w-[6%]">Rol</li>
+        <li class="w-[6%]">Estado</li>
+        <li class="w-[3%]"></li>
+      </ul>
       {% for user in users %}
-      <tr class="flex flex-row w-full justify-between">
+      <ul class="flex flex-row py-2 bg-gray-100/40 rounded-lg hover:bg-slate-200
+                    transition-colors duration-200 px-2 text-sm">
         {% if user.area %}
-          <td class="w-[13.5%]">{{ user.username }}</td>
-          <td class="w-[13.5%]">{{ user.area }}</td>
-          <td class="w-[18%]">{{ user.first_name }} {{user.last_name}}</td>
-          <td class="w-[22%]">{{ user.email }}</td>
-          <td class="w-[9%]">
-              {% if user.is_staff %}
-                Administrador
-              {% else %}
-                Usuario
-              {% endif %}
-          </td>
-          <td class="w-[5%]">
+          <li class="w-[15%]">{{ user.username }}</li>
+          <li class="w-[15%]">{{ user.area }}</li>
+          <li class="w-[25%]">{{ user.first_name }} {{user.last_name}}</li>
+          <li class="w-[20%]">{{ user.email }}</li>
+          <li class="w-[10%]">{{ user.permissions}}</li>
+          <li class="w-[6%]">
+            {% if user.is_staff %}
+                Activo
+            {% else %}
+                Inactivo
+            {% endif %}
+          </li>
+          <li class="w-[6%]">
             {% if user.is_active %}
                 Activo
             {% else %}
                 Inactivo
             {% endif %}
-          </td>
-          <td class="w-[5%]">
-            <a href="{% url 'updateUser' user.id%}">
+          </li>
+          <li class="w-[3%] flex justify-center items-center">
+            <a class="hover:scale-110" href="{% url 'updateUser' user.id%}">
               {% include "icons/editUser.html" %}
             </a>
-          </td>
+          </li>
         {% endif %}
-      </tr>
+      </ul>
       {% endfor %}
-    </table>
+    </div>
   </div>
 
-  <div>
+  {% comment %} <div>
     <h2>Crear nuevo Usuario</h2>
-    <form method="POST">
+    <form meliod="POST">
       {% csrf_token %} {{formUser.as_p}}
       <button type="submit">Crear Usuario</button>
     </form>
@@ -66,7 +69,7 @@
       {% endfor %}
     </ul>
     {% endif %}
-  </div>
+  </div> {% endcomment %}
 </section>
 
 {% endblock datas %}

@@ -2,40 +2,51 @@
 {% load static %}
 
 {% block datas %}
-    <section class="areas">
-        <div>
-            <div class="top-areas">
-                <h2>Areas de Control y Servicio</h2>
+    <section class="h-full flex flex-row justify-around">
+        <div class="h-full ">
+            <div class="top-areas mb-6">
+                <h2 class="text-2xl text-gray-700 font-semibold">Areas de Control y Servicio</h2>
             </div>
-            <table>
-                <tr>
-                    <th>Area</th>
-                    <th>Nombre Area</th>
-                    <th></th>
-                </tr>
-                {% for area in areas %}
-                <tr class="datas-areas ">
-                    <td>{{forloop.counter}}</td>
-                    <td>{{area.name}}</td>
-                    <td>
-                        <a
-                            href="{% url 'deleteArea' area.id %}"
-                            onclick="return confirm('Esta seguro de eliminar esta Area?')"
-                        >
-                            {% include "icons/delete.html" %}
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
+
+            <div class="w-[600px] h-[100%] border-2 bg-white border-gray-500 overflow-y-auto rounded-lg shadow-xl">
+                <ul class="flex flex-row text-xl font-semibold bg-gray-300 px-4 py-2 text-center">
+                  <li class="w-1/3">Area</li>
+                  <li class="w-1/3">Nombre Area</li>
+                  <li class="w-1/3">Documento</li>
+                </ul>
+              
+                <div class="flex flex-col gap-2 py-2">
+                  {% for area in areas %}
+                    <ul
+                        class="flex flex-row gap-2 py-2 bg-gray-100/40 rounded-lg hover:bg-slate-200
+                        transition-colors duration-200 px-2 text-lg">
+                        <li class="w-1/3 flex text-center justify-center items-center">{{forloop.counter}}</li>
+                        <li class="w-1/2 flex text-center justify-center items-center">{{area.name}}</li>
+                        <li class="w-1/3 flex text-center justify-center items-center">
+                            <a
+                                href="{% url 'deleteArea' area.id %}"
+                                onclick="return confirm('Esta seguro de eliminar esta Area?')"
+                            >
+                                {% include "icons/delete.html" %}
+                            </a>
+                        </li>
+                    </ul>
+                  {% endfor %}
+                </div>
+            </div>
         </div>
 
         <div>
-            <h2>Nueva Area de Control y Servicio</h2>
+            <h2 class="text-xl font-semibold underline underline-offset-4 decoration-2 mb-6">Nueva Area de Control y Servicio</h2>
             <form method="POST">
                 {% csrf_token %}
-                {{form.as_p}}
-                <button type="submit">
+                {% for field in form %}
+                    <div class="flex flex-col justify-center items-start gap-4">
+                        <label class="text-gray-800 text-xl" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <button class="bg-blue-700 hover:scale-105 transition-all duration-200 text-white mt-5 text-2xl px-5 shadow-xl p-2 rounded-full" type="submit">
                     Crear Area
                 </button>
             </form>

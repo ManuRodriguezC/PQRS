@@ -15,7 +15,7 @@
                         <a
                             class="px-4 py-2 w-40 rounded-xl text-center bg-red-600"
                             onclick="return confirm('Esta seguro de finalizar esta solicitud?')"
-                            href="{% url 'closepqrs' pqrs.id %}">
+                            href="{% url 'closepqrs' pqrs.num %}">
                             Cerrar solicitud
                         </a>
                     {% endif %}

@@ -8,11 +8,12 @@ from users.models import PQRS
 from .models import Areas, TypesPQRS
 from .forms import CreateUserForm
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from .decorators import check_superadmin
 
+@login_required
+@check_superadmin()
 def areasAll(request):
-    if not request.user.is_staff:
-        return redirect('home')
-
     areas = Areas.objects.all()
     form = AreasForms()
     if request.method == 'POST':
@@ -22,16 +23,16 @@ def areasAll(request):
             return redirect('areas')
     return render(request, 'admin/areas.html', {'areas': areas, 'form': form})
 
+@login_required
+@check_superadmin()
 def deleteArea(request, id):
-    if not request.user.is_staff:
-        return redirect('home')
     area = get_object_or_404(Areas, id=id)
     area.delete()
     return redirect('areas')
 
+@login_required
+@check_superadmin()
 def typesPQRSAll(request):
-    if not request.user.is_staff:
-        return redirect('home')
     pqrs = TypesPQRS.objects.all()
     form = TypesPQRSForms()
     if request.method == 'POST':
@@ -41,16 +42,16 @@ def typesPQRSAll(request):
             return redirect('typesPQRS')
     return render(request, 'admin/pqrs.html', {'pqrs': pqrs, 'form': form})
 
+@login_required
+@check_superadmin()
 def deleteTypePQRS(request, id):
-    if not request.user.is_staff:
-        return redirect('home')
     pqrs = get_object_or_404(TypesPQRS, id=id)
     pqrs.delete()
     return redirect('typesPQRS')
 
+@login_required
+@check_superadmin()
 def updateTypePQRS(request, id):
-    if not request.user.is_staff:
-        return redirect('home')
     pqrs = get_object_or_404(TypesPQRS, id=id)
     if request.method == 'POST':
         form = TypesPQRSForms(request.POST, instance=pqrs)
@@ -61,9 +62,9 @@ def updateTypePQRS(request, id):
         form = TypesPQRSForms(instance=pqrs)
     return render(request, 'admin/update_pqrs.html', {'form': form})
 
+@login_required
+@check_superadmin()
 def users(request):
-    if not request.user.is_staff:
-        return redirect('home')
     usersAll = CustumUser.objects.all()
     formUser = CreateUserForm()
     if request.method == "POST":
@@ -84,14 +85,13 @@ def users(request):
             email_message.send()
             return redirect('users')
         else:
-            print(formUser.errors)
             return render(request, 'users/users.html',
                           {'users': usersAll, 'formUser': formUser, 'error': formUser.errors})
     return render(request, 'users/users.html', {'users': usersAll, 'formUser': formUser})
 
+@login_required
+@check_superadmin()
 def updateUser(request, id):
-    if not request.user.is_staff:
-        return redirect('home')
     user = get_object_or_404(CustumUser, id=id)
     if request.method == 'POST':
         form = CreateUserForm(request.POST, instance=user)
@@ -102,10 +102,9 @@ def updateUser(request, id):
         form = CreateUserForm(instance=user)
     return render(request, 'users/updateUser.html', {'form': form})
 
+@login_required
+@check_superadmin()
 def statistics(request):
-    if not request.user.is_staff:
-        return redirect('home')
-    
     usersActives = CustumUser.objects.filter(is_active=True)
     listUsers = [
         {

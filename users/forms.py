@@ -1,14 +1,14 @@
 from django import forms
-from .models import PQRS, Commets
+from .models import PQRS, Commets, Files
 from account.models import CustumUser
 from django.core.mail import EmailMessage
 from django.conf import settings
-
+from django.forms.models import inlineformset_factory
 
 class PQRSCreateForm(forms.ModelForm):
     class Meta:
         model =  PQRS
-        fields = ['asociado', 'typePQRS', 'description', 'file', 'image']
+        fields = ['asociado', 'name', 'email', 'phone', 'typePQRS', 'description']
         
     def save(self, commit=True, user=None, *args, **kwargs):
         instance = super().save(commit=False)
@@ -29,6 +29,16 @@ class PQRSCreateForm(forms.ModelForm):
         email_message.send()
         return instance
 
+
+class FileForm(forms.ModelForm):
+    class Meta:
+        model = Files
+        fields = ['file']
+
+FileFormSet = inlineformset_factory(
+    PQRS, Files, form=FileForm, extra=0, can_delete=True
+)
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Commets
@@ -45,7 +55,7 @@ class CommentForm(forms.ModelForm):
         return instance
 
 class SearchForm(forms.Form):
-    search = forms.IntegerField(label="", widget=forms.NumberInput(attrs={
-        'class': 'bg-transparent border-0 focus:outline-none focus:ring-0 focus:border-gray-300 rounded-full',
-        'placeholder': 'Documento Asociado'
+    search = forms.CharField(label="", widget=forms.TextInput(attrs={
+        'class': 'bg-gray-200 border-[10px] rounded-full',
+        'placeholder': 'Buscar'
     }))

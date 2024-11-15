@@ -1,12 +1,24 @@
-<div class="pagination">
-  <span class="step-links">
+<div class="m-4 text-lg text-gray-600 font-medium">
+  <span class="flex flex-row gap-2">
     {% if page.has_previous %}
-    <a href="?page={{ page.previous_page_number }}">Anterior</a> {% endif %}
-    <span class="current">
-      Pagina {{ page.number }} de {{ page.paginator.num_pages }}.
-    </span>
+      <a
+      href="?page={{ page.previous_page_number }}"
+      class="bg-gray-300 px-2 rounded-md text-blue-500 hover:bg-gray-300/50 transition-all duration-200"
+      >Anterior</a>
+    {% endif %}
+    <div class="flex flex-row gap-2">
+      <p>
+        Pagina
+      </p>
+      <p class="w-6 flex text-white rounded-sm justify-center items-center bg-gray-700">{{ page.number }}</p>
+      <p>de</p>
+      <p>{{ page.paginator.num_pages }}</p>
+    </div>
     {% if page.has_next %}
-    <a href="?page={{ page.next_page_number }}">Siguiente</a>
+    <a
+    href="?page={{ page.next_page_number }}"
+    class="bg-gray-300 px-2 rounded-md text-blue-500 hover:bg-gray-300/50 transition-all duration-200"
+    >Siguiente</a>
     {% endif %}
   </span>
 </div>

@@ -1,11 +1,29 @@
 {% extends "baseUsers.html" %}
 
 {% block datas %}
-    <h2>Actualizar Usuario</h2>
-    <form method="POST">
+    <h2 class="text-gray-700 text-3xl font-semibold">Actualizar Usuario</h2>
+    <form method="POST" class="p-4 w-full mt-6">
         {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">
+        <div class="flex flex-wrap gap-6">
+            {% for field in form %}
+                <div class="flex flex-row gap-1 items-center relative w-[400px]">
+                    {% if forloop.counter < 7 %}
+                    <label
+                        class="absolute -top-2 left-1 px-3 bg-white rounded-md text-gray-800 text-sm"
+                        for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {% else %}
+                    <label
+                        for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {% endif %}
+                    {{ field }}
+                </div>
+            {% endfor %}
+        </div>
+        <button class="w-[250px] bg-blue-700 hover:scale-105 transition-all duration-200 text-white mt-5 text-2xl px-5 shadow-xl p-2 rounded-full" type="submit">
             Actualizar
         </button>
     </form>

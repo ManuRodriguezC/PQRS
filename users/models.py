@@ -59,12 +59,21 @@ class Files(models.Model):
     pqrs = models.ForeignKey(PQRS, on_delete=models.SET_NULL, null=True, blank=True)
     file = models.FileField(null=True, blank=True, upload_to='files/')
     created = models.DateTimeField(auto_now_add=True)
+    
+    def nameFile(self):
+        if self.file:
+            return self.file.name.split('/')[-1]
+        return None
 
 class Commets(models.Model):
     """"""
     pqrs = models.ForeignKey(PQRS, on_delete=models.SET_NULL, null=True, blank=True)
     coment = models.CharField(max_length=1000)
-    file_add = models.FileField(null=True, blank=True, upload_to='files/')
-    image_add = models.ImageField(null=True, blank=True, upload_to='images/')
+    file = models.FileField(null=True, blank=True, upload_to='files/')
     created_by = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
+    
+    def nameFile(self):
+        if self.file:
+            return self.file.name.split('/')[-1]
+        return None

@@ -10,8 +10,8 @@
         <li class="w-[15%] text-center">Area</li>
         <li class="w-[25%] text-center">Nombre</li>
         <li class="w-[20%] text-center">Correo</li>
-        <li class="w-[10%]">Staff</li>
-        <li class="w-[6%]">Rol</li>
+        <li class="w-[10%]">Rol</li>
+        <li class="w-[6%]">Admin</li>
         <li class="w-[6%]">Estado</li>
         <li class="w-[3%]"></li>
       </ul>
@@ -24,13 +24,7 @@
           <li class="w-[25%]">{{ user.first_name }} {{user.last_name}}</li>
           <li class="w-[20%]">{{ user.email }}</li>
           <li class="w-[10%]">{{ user.permissions}}</li>
-          <li class="w-[6%]">
-            {% if user.is_staff %}
-                Activo
-            {% else %}
-                Inactivo
-            {% endif %}
-          </li>
+          <li class="w-[6%]">{{ user.is_staff }}</li>
           <li class="w-[6%]">
             {% if user.is_active %}
                 Activo

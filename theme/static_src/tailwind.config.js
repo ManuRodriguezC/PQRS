@@ -42,7 +42,20 @@ module.exports = {
         // '../../**/*.py'
     ],
     theme: {
-        extend: {},
+        extend: {
+            backgroundColor: {
+                'cootra': '#2F52A0'
+            },
+            colors: {
+                'cootra': '#2F52A0'
+            },
+            boxShadow: {
+                'con': 'rgba(0, 0, 0, 0.35) 0px 5px 15px;'
+            },
+            scale: {
+                '102': '1.02'
+            }
+          },
     },
     plugins: [
         /**

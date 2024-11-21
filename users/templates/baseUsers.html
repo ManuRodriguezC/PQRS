@@ -3,7 +3,7 @@
 {% block content %}
 {% load django_browser_reload %}
 <body class="flex w-full h-screen overflow-hidden">
-    <aside class="w-1/5 bg-gray-950 text-white p-4 h-full">
+    <aside class="w-1/5 bg-cootra text-white p-4 h-full">
         <div class="flex flex-row justify-between items-center p-3">
             <div class="flex flex-row justify-center items-center">
                 <p class="text-xl text-white">{{ request.user.username }}</p>
@@ -12,26 +12,26 @@
             <p class="text-sm text-gray-400">pqrs v.1</p>
         </div>
         <div class="flex flex-col px-5 py-7">
-            <p class="text-base text-gray-400">General</p>
+            <p class="text-base text-white font-semibold underline underline-offset-4">General</p>
             <div class="text-base flex flex-col gap-4 mt-5">
                 <a 
                   href="{% url 'home' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
-                  border-[1px] border-gray-500 hover:bg-gray-900">
+                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
                     {% include "icons/openCases.html" %}
                     <p>Casos Abiertos</p>
                 </a>
                 <a 
                   href="{% url 'closedpqrs' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
-                  border-[1px] border-gray-500 hover:bg-gray-900">
+                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
                     {% include "icons/closeCases.html" %}
                     <p>Casos Cerrados</p>
                 </a>
                 <a 
                   href="{% url 'expiredpqrs' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
-                  border-[1px] border-gray-500 hover:bg-gray-900">
+                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
                     {% include "icons/venCases.html" %}
                     <p>Casos Casos Vencidos</p>
                 </a>
@@ -39,33 +39,33 @@
         </div>
         {% if request.user.is_staff %}
         <div class="flex flex-col px-5 py-7">
-            <p class="text-base text-gray-400">Administrador</p>
+            <p class="text-base text-white font-semibold underline underline-offset-4">Administrador</p>
             <div class="text-base flex flex-col gap-4 mt-5">
                 <a 
                   href="{% url 'areas' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
-                  border-[1px] border-gray-500 hover:bg-gray-900">
+                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
+                  border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
                     {% include "icons/openCases.html" %}
                     <p>Areas</p>
                 </a>
                 <a 
                   href="{% url 'typesPQRS' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
-                  border-[1px] border-gray-500 hover:bg-gray-900">
+                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
+                  border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
                     {% include "icons/closeCases.html" %}
                     <p>Tipos PQRS</p>
                 </a>
                 <a 
                   href="{% url 'users' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
-                  border-[1px] border-gray-500 hover:bg-gray-900">
+                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
+                  border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
                     {% include "icons/venCases.html" %}
                     <p>Usuarios</p>
                 </a>
                 <a 
                   href="{% url 'statistics' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl
-                  border-[1px] border-gray-500 hover:bg-gray-900">
+                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
+                  border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
                     {% include "icons/venCases.html" %}
                     <p>Estadisticas</p>
                 </a>
@@ -74,10 +74,9 @@
         {% endif %}
     </aside>
 
-    <main class="w-4/5 bg-gray-200 flex flex-col h-screen">
+    <main class="w-4/5 bg-gray-100 flex flex-col h-screen">
         {% include "header.html" %}
-        <div class="separator"></div>
-        <div class="px-10 py-5 h-[80%] w-full">
+        <div class="px-10 py-5 h-[90%] w-full overflow-auto">
             {% block datas %}
             {% endblock datas %}
         </div>

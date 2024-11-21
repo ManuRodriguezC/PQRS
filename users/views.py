@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage
-from .models import PQRS, Commets
+from .models import PQRS, Commets, Files
 from django.http import HttpResponseRedirect, Http404
 from .forms import PQRSCreateForm, CommentForm, SearchForm, FileFormSet
 from django.db.models import Q
@@ -120,6 +120,7 @@ def pqrs(request, num):
         return redirect("home")
 
     comments = Commets.objects.filter(pqrs=find_pqrs)
+    files = Files.objects.filter(pqrs=find_pqrs)
 
     if request.method == "POST":
         formComment = CommentForm(request.POST, request.FILES)
@@ -130,7 +131,8 @@ def pqrs(request, num):
     return render(request, 'pqrs.html', {
         'pqrs': find_pqrs,
         'formComment': formComment,
-        'comments': comments
+        'comments': comments,
+        'files': files
     })
 
 @login_required
@@ -138,6 +140,14 @@ def closedPQRS(request, num):
     pqrs = get_object_or_404(PQRS, num=num)
     try:
         pqrs.closePQRS(request.user.username)
+        return redirect('home')
+    except Http404:
+        return redirect('home')
+
+@login_required
+def sendResponse(request, num):
+    pqrs = get_object_or_404(PQRS, num=num)
+    try:
         return redirect('home')
     except Http404:
         return redirect('home')

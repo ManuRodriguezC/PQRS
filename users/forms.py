@@ -42,7 +42,18 @@ FileFormSet = inlineformset_factory(
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Commets
-        fields = ['coment', 'file_add', 'image_add']
+        fields = ['coment', 'file']
+        labels = {
+            'coment': 'Comentario',
+            'file': 'Archivo'
+        }
+        widgets = {
+            'coment': forms.Textarea(attrs={
+                'class': 'rounded-md w-full',
+                'rows': '3',
+                'placeholder': 'Comentario o Respuesta'
+            })
+        }
     
     def save(self, commit=True, user=None, pqrs=None, *args, **kwargs):
         instance = super().save(commit=False)
@@ -57,5 +68,5 @@ class CommentForm(forms.ModelForm):
 class SearchForm(forms.Form):
     search = forms.CharField(label="", widget=forms.TextInput(attrs={
         'class': 'bg-gray-200 border-[10px] rounded-full',
-        'placeholder': 'Buscar'
+        'placeholder': 'Buscar',
     }))

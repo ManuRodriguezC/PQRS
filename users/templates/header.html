@@ -2,11 +2,11 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}" />
 {% endblock styles %}
 
-<header class="flex flex-row justify-between items-center px-10 py-4 border-b-2 border-gray-950">
+<header class="flex flex-row justify-between items-center px-10 py-4 border-b-2 border-cootra shadow-lg">
   <a
     href="{% url 'createdpqrs' %}"
     class="flex justify-center items-center bg-blue-300 rounded-md
-    px-3 py-1 text-xl shadow-2xl gap-3 text-blue-800 border-[1px] border-gray-400/40
+    px-3 py-1 text-xl shadow-2xl gap-3 text-cootra border-[1px] border-cootra
     hover:scale-105 transition-all duration-200"
   >
     {% include "icons/new.html" %} Nueva PQRS

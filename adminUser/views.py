@@ -74,6 +74,7 @@ def users(request):
             password = generate_random_password()
             user.set_password(password)
             user.save()
+            
             email = formUser.cleaned_data.get('email')
             message = f"Hola {user.username},\n\nTu cuenta ha sido creada con éxito al modulo de PQRS Cootratiempo.\n\nTu correo es {email}\nTu contraseña es: {password}\n\nSi deseas cambiar tu contraseña ingresa en olvide contraseña."
             email_message = EmailMessage(

@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block datas %}
-    <section class="created-pqrs">
-        <h2>Crear PQRS</h2>
+    <section class="border-2 border-gray-600">
+        <h2 class="text-3xl text-cootra font-semibold">Crear PQRS</h2>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ pqrs_form.as_p }}

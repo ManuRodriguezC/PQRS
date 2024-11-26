@@ -1,5 +1,5 @@
 from django import forms
-from .models import PQRS, Commets, Files
+from .models import PQRS, Commets, Files, ResponsePQRS
 from account.models import CustumUser
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -10,7 +10,7 @@ class PQRSCreateForm(forms.ModelForm):
         model =  PQRS
         fields = ['asociado', 'name', 'email', 'phone', 'typePQRS', 'description']
         
-    def save(self, commit=True, user=None, *args, **kwargs):
+    def save(self, commit=True, user=None, path=None, *args, **kwargs):
         instance = super().save(commit=False)
         if user:
             instance.userCreated = user.username
@@ -18,7 +18,13 @@ class PQRSCreateForm(forms.ModelForm):
             instance.save(*args, **kwargs)
         allUsersArea = CustumUser.objects.filter(area=instance.typePQRS.area_redirect)
         emails = [user.email for user in allUsersArea]
-        message = f"Hola, se ha generado un PQRS de {instance.typePQRS}.\nPor favor revisa tu bandeja de PQRS para darle seguimiento."
+        url = f"http:127.0.0.1:8000/pqrs/{instance.num}"
+        messageText = f"""
+            Hola, se ha generado una PQRS de {instance.typePQRS}.\n
+            Por favor revise su bandeja en PQRS abiertas para darle seguimiento,
+            o ingrese al siguiente link: {url}
+        """
+        message = messageText
         title = f"PQRS - {instance.typePQRS} a sido creada"
         email_message = EmailMessage(
             subject=title,
@@ -70,3 +76,25 @@ class SearchForm(forms.Form):
         'class': 'bg-gray-200 border-[10px] rounded-full',
         'placeholder': 'Buscar',
     }))
+
+class ResponsePQRSForm(forms.ModelForm):
+    class Meta:
+        model = ResponsePQRS
+        fields = ['response', 'file']
+        labels = {
+            'response': 'Respuesta al Asociado',
+            'file': 'Adjuntar archivo'
+        }
+    
+    def save(self, commit=True, user=None, pqrs=None, *args, **kwargs):
+        instance = super().save(commit=False)
+        if user:
+            instance.response_by = user.username
+        if pqrs:
+            instance.pqrs = pqrs
+        if commit:
+            instance.save(*args, **kwargs)
+        if pqrs:
+            pqrs.waitingForResponse()
+            pqrs.save()
+        return instance

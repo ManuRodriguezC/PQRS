@@ -1,16 +1,18 @@
-{% extends "base.html" %}
+{% extends "baseUsers.html" %}
 {% load static %}
 
-{% block styles %}
-    <link href="{% static "css/login.css" %}" rel="stylesheet">
-{% endblock styles %}
+{% block title %}Inicio Sesión PQRS{% endblock %}
 
-{% block title %}Inicio de Sesion{% endblock title %}
 
 {% block content %}
-    <div class="cont">
-        <div class="container">
-            <h3 class="heading">Iniciar Sesión</h3>
+    <div class="w-full h-screen bg-backlogin flex flex-col justify-between items-center">
+        <div class="w-full p-5 flex flex-row gap-10 items-end">
+            <img class="h-20" src="https://cootratiemposimulador.pythonanywhere.com/static/images/logo_cootratiempo.jpg" alt="logo cootratiempo">
+            <h1 class="text-white text-4xl font-semibold">PQRS Cootratiempo</h1>
+        </div>
+        <div class="h-auto bg-black/60 w-[500px] text-white flex flex-col justify-between items-center
+            p-5 rounded-2xl border-[1px] border-gray-700">
+            <h3 class="text-2xl font-bold">Inicio Sesión</h3>
             {% if form.errors %}
                 <p>
                     Su usuario o contraseña no son correctos.
@@ -18,14 +20,34 @@
                 </p>
             {% endif %}
 
-            <form class="form" action="{% url 'login' %}" method="post">
-                {{ form.as_p }}
+            <form class="w-[60%] flex flex-col gap-4 items-center my-6" action="{% url 'login' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}" />
-                <span class="forgot-password"><a href="{% url "password_reset" %}">Olvidaste tu contraseña?</a></span>
-                <input class="login-button" type="submit" value="Iniciar Sesion">
+                {% for field in form %}
+                    <div class="relative flex flex-col justify-center items-start gap-1 w-full">
+                        <label class="text-gray-100 text-sm" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <input
+                    class="w-[200px] bg-gray-500 rounded-md text-xl mt-4 cursor-pointer hover:bg-gray-700
+                    transition-all duration-200 border-[1px] border-transparent hover:border-white"
+                    type="submit" value="Iniciar Sesión">
             </form>
-            <span class="agreement">Ingresa tus credenciales</span>
+            <span class="text-xs">Ingresa tus credenciales</span>
+
+            <span class="relative mt-2">
+                <a 
+                    class="relative before:content-[''] before:absolute before:w-0 before:h-[2px] before:bg-white before:-bottom-1
+                    before:left-0 hover:before:w-full transition-all duration-200"
+                    href="{% url 'password_reset' %}">
+                    Olvidaste tu contraseña?
+                </a>
+            </span>
+            
+        </div>
+        <div class="w-full flex text-sm justify-end text-white mb-4 mr-4">
+            <p class="flex ">Modulo de PQRS - Cootratiempo - Version 1.0 - 2024</p>
         </div>
     </div>
 {% endblock content %}

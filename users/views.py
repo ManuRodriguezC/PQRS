@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage
 from .models import PQRS, Commets, Files
 from django.http import HttpResponseRedirect, Http404
-from .forms import PQRSCreateForm, CommentForm, SearchForm, FileFormSet
+from .forms import PQRSCreateForm, CommentForm, SearchForm, FileFormSet, ResponsePQRSForm
 from django.db.models import Q
 
 @login_required
@@ -50,9 +50,14 @@ def closePQRS(request):
         formSearch = SearchForm(request.POST)
         if formSearch.is_valid():
             search = formSearch.cleaned_data.get('search')
-            closePQRS = closePQRS.filter(asociado=search)
-            formSearch = SearchForm()
-
+            if search:
+                try:
+                    search_int = int(search)
+                    closePQRS = openPQRS.filter(asociado=search_int)
+                except ValueError:
+                    closePQRS = openPQRS.filter(num=search)
+                formSearch = SearchForm()
+                
     paginator = Paginator(closePQRS, 10)
     page_number = request.GET.get('page', 1)
     try:
@@ -74,8 +79,13 @@ def expiredPQRS(request):
         formSearch = SearchForm(request.POST)
         if formSearch.is_valid():
             search = formSearch.cleaned_data.get('search')
-            expirePQRS = expirePQRS.filter(asociado=search)
-            formSearch = SearchForm()
+            if search:
+                try:
+                    search_int = int(search)
+                    expirePQRS = openPQRS.filter(asociado=search_int)
+                except ValueError:
+                    expirePQRS = openPQRS.filter(num=search)
+                formSearch = SearchForm()
     
     paginator = Paginator(expirePQRS, 10)
     page_number = request.GET.get('page', 1)
@@ -86,13 +96,42 @@ def expiredPQRS(request):
     return render(request, 'expired_pqrs.html', {'pqrs': pqrs_expired, 'formSearch': formSearch})
 
 @login_required
+def waitResponsePQRS(request):
+    formSearch = SearchForm()
+    userType = request.user
+    if userType.is_staff:
+        waitPQRS = PQRS.objects.filter(status="Wait")
+    else:
+        waitPQRS = PQRS.objects.filter(typePQRS__area_redirect=userType.area, status="Wait")
+        
+    if request.method == 'POST':
+        formSearch = SearchForm(request.POST)
+        if formSearch.is_valid():
+            search = formSearch.cleaned_data.get('search')
+            if search:
+                try:
+                    search_int = int(search)
+                    waitPQRS = openPQRS.filter(asociado=search_int)
+                except ValueError:
+                    waitPQRS = openPQRS.filter(num=search)
+                formSearch = SearchForm()
+    
+    paginator = Paginator(waitPQRS, 10)
+    page_number = request.GET.get('page', 1)
+    try:
+        pqrs_wait = paginator.page(page_number)
+    except EmptyPage:
+        return HttpResponseRedirect(f"{request.path}?page=1")
+    return render(request, 'wait_pqrs.html', {'pqrs': pqrs_wait, 'formSearch': formSearch})
+
+@login_required
 def createdPQRS(request):
     if request.method == 'POST':
         pqrs_form = PQRSCreateForm(request.POST)
         file_formset = FileFormSet(request.POST, request.FILES)
         
         if pqrs_form.is_valid() and file_formset.is_valid():
-            pqrs_instance = pqrs_form.save(user=request.user)
+            pqrs_instance = pqrs_form.save(user=request.user, path=request.path)
             for form in file_formset:
                 if form.is_valid() and not form.cleaned_data.get('DELETE'):
                     file = form.save(commit=False)
@@ -110,6 +149,7 @@ def createdPQRS(request):
 @login_required
 def pqrs(request, num):
     formComment = CommentForm()
+    formResponse = ResponsePQRSForm()
     
     try:
         find_pqrs = get_object_or_404(PQRS.objects.filter(num=num))
@@ -123,14 +163,22 @@ def pqrs(request, num):
     files = Files.objects.filter(pqrs=find_pqrs)
 
     if request.method == "POST":
-        formComment = CommentForm(request.POST, request.FILES)
-        if formComment.is_valid():
-            formComment.save(user=request.user, pqrs=find_pqrs)
-            return redirect('findpqrs', num=num)
+        if 'submit_comment' in request.POST:    
+            formComment = CommentForm(request.POST, request.FILES)
+            if formComment.is_valid():
+                formComment.save(user=request.user, pqrs=find_pqrs)
+                return redirect('findpqrs', num=num)
+
+        if 'submit_response' in request.POST:    
+            formResponse = ResponsePQRSForm(request.POST, request.FILES)
+            if formResponse.is_valid():
+                formResponse.save(user=request.user, pqrs=find_pqrs)
+                return redirect('home')
 
     return render(request, 'pqrs.html', {
         'pqrs': find_pqrs,
         'formComment': formComment,
+        'formResponse': formResponse,
         'comments': comments,
         'files': files
     })

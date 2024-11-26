@@ -39,25 +39,32 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="flex flex-row justify-around mt-3">
-                <button class="bg-blue-400 text-xl px-4 py-1 rounded-md text-black shadow-md border-[1px] border-white
-                    hover:bg-blue-500/80 hover:scale-102 transition-all duration-200">
+            {% if pqrs.status == "Open" %}
+                <div class="flex flex-row justify-around mt-3">
+                    <button
+                        class="bg-blue-400 text-xl px-4 py-1 rounded-md text-black shadow-md border-[1px] border-white
+                        hover:bg-blue-500/80 hover:scale-102 transition-all duration-200"
+                        id="open-dialog-response"
+                    >
                     Enviar Respuesta
                 </button>
-                <a href="{% url 'closepqrs' pqrs.num %}"
-                    onclick="return confirm('Esta seguro de cerrar esta PQRS sin enviar una respuesta al asociado?')"
-                    class="bg-red-400 text-xl px-4 py-1 rounded-md text-white shadow-md border-[1px] border-white
-                    hover:bg-red-500/80 hover:scale-102 transition-all duration-200">
-                    Finalizar Solicitud
-                </a>
-            </div>
+                    <a href="{% url 'closepqrs' pqrs.num %}"
+                        onclick="return confirm('Esta seguro de cerrar esta PQRS sin enviar una respuesta al asociado?')"
+                        class="bg-red-400 text-xl px-4 py-1 rounded-md text-white shadow-md border-[1px] border-white
+                        hover:bg-red-500/80 hover:scale-102 transition-all duration-200">
+                        Finalizar Solicitud
+                    </a>
+                </div>
+            {% endif %}
         </div>
         
         <div class="h-[2px] w-full bg-cootra my-6 shadow-black"></div>
 
         <div class="flex flex-col justify-between">
+
             {% if pqrs.status == "Open" %}
-            <div id="backdrop" class="hidden fixed inset-0 w-screen h-screen bg-black/30 backdrop-blur-sm"></div>
+            <div id="backdrop" class="hidden fixed inset-0 w-screen h-screen bg-black/30 Z-20
+            backdrop-blur-sm"></div>
             <dialog
                 id="dialog"
                 class="hidden fixed w-[50%] inset-0 flex-col items-center justify-center rounded-xl z-50
@@ -67,26 +74,56 @@
                 </button>
                 <h2 class="text-cootra text-xl font-semibold mb-4">Agregar Comentario o Respuesta</h2>
                 <form method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4">
+                    <input type="hidden" name="submit_comment" value="1">
                     {% csrf_token %}
                     {% for field in formComment %}
-                    <div class="flex flex-col justify-center items-start">
-                        <label class="text-gray-700 text-base font-semibold" for="{{ field.id_for_label }}">{{ field.label }}:</label>
-                        {{ field }}
-                    </div>
-                {% endfor %}
+                        <div class="flex flex-col justify-center items-start">
+                            <label class="text-gray-700 text-base font-semibold" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
                     <button type="submit"
                     class="bg-cootra hover:opacity-85 transition-all duration-200 text-white mt-5 text-lg px-5 shadow-xl p-2 rounded-full">
                         Agregar Comentario
                     </button>
                 </form>
             </dialog>
+
+            <dialog
+                id="dialog-response"
+                class="hidden fixed w-[50%] inset-0 flex-col items-center justify-center rounded-xl z-50
+                border-2 border-gray-500 shadow-2xl px-20 py-8">
+                <button id="close-dialog-response" class="absolute top-3 right-3">
+                    {% include "icons/close.html" %}
+                </button>
+                <h2 class="text-cootra text-xl font-semibold mb-4">Agregar Respuesta</h2>
+                <form method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4">
+                    <input type="hidden" name="submit_response" value="1">
+                    {% csrf_token %}
+                    {% for field in formResponse %}
+                        <div class="flex flex-col justify-center items-start">
+                            <label class="text-gray-700 text-base font-semibold" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <button type="submit"
+                    class="bg-cootra hover:opacity-85 transition-all duration-200 text-white mt-5 text-lg px-5 shadow-xl p-2 rounded-full">
+                        Enviar Respuesta
+                    </button>
+                </form>
+            </dialog>
+
+
             {% endif %} 
             <div class="relative flex flex-col justify-between">
-                <button type="button"
-                    id="open-dialog"
-                    class="absolute right-2 -top-3 bg-cootra w-[300px] h-[35px] hover:opacity-85 transition-all duration-200 text-white text-lg px-5 shadow-xl rounded-lg">
-                    Agregar Comentario
-                </button>
+                {% if pqrs.status == "Open" %}
+                    <button type="button"
+                        id="open-dialog"
+                        class="absolute right-2 -top-3 bg-cootra w-[300px] h-[35px] hover:opacity-85
+                        z-10 transition-all duration-200 text-white text-lg px-5 shadow-xl rounded-lg">
+                        Agregar Comentario
+                    </button>
+                {% endif %} 
                 <div class="w-[100%]">
                     <h3 class="text-cootra text-2xl mb-2">Comentarios o respuestas adjuntadas</h3>
                     <ul class="flex flex-col gap-5">
@@ -108,13 +145,20 @@
             </div>
 
         </div>
+
     </section>
 
     <script>
         const backdrop = document.getElementById('backdrop')
+
         const dialog = document.getElementById('dialog')
+        const dialogResponse = document.getElementById('dialog-response')
+
         const closeDialogButton = document.getElementById('close-dialog')
+        const closeDialogResponseButton = document.getElementById('close-dialog-response')
+
         const openDialogButton = document.getElementById('open-dialog')
+        const openDialogResponseButton = document.getElementById('open-dialog-response')
 
         function openDialog() {
             dialog.classList.remove('hidden')
@@ -128,9 +172,23 @@
             backdrop.classList.add('hidden');
         }
 
+        function openDialogResponse() {
+            dialogResponse.classList.remove('hidden')
+            dialogResponse.classList.add('flex')
+            backdrop.classList.remove('hidden')
+        }
+
+        function closeDialogResponse() {
+            dialogResponse.classList.add('hidden');
+            backdrop.classList.add('hidden');
+        }
+
         backdrop.addEventListener('click', closeDialog);
         closeDialogButton.addEventListener('click', closeDialog);
         openDialogButton.addEventListener('click', openDialog);
+
+        closeDialogResponseButton.addEventListener('click', closeDialogResponse);
+        openDialogResponseButton.addEventListener('click', openDialogResponse);
 
     </script>
 

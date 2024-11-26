@@ -26,6 +26,8 @@ class PQRS(models.Model):
     status = models.CharField(max_length=100, default="Open")
     close_by = models.CharField(max_length=100, null=True, blank=True)
     closed = models.DateTimeField(null=True, blank=True)
+    dateResponse = models.DateTimeField(null=True, blank=True)
+    tokenControl = models.CharField(max_length=100, null=True, blank=True)
 
     objects = PQRSManager()
 
@@ -43,6 +45,7 @@ class PQRS(models.Model):
     def check_time_response(self):
         if self.timeResponse and self.timeResponse < timezone.now() and self.status == "Open":
             self.status = "Expired"
+            self.closed = datetime.now()
             self.save()
 
     def closePQRS(self, user, *args, **kwargs):
@@ -50,6 +53,11 @@ class PQRS(models.Model):
         self.close_by = user
         self.closed = datetime.now()
         super(PQRS, self).save(*args, **kwargs)
+    
+    def waitingForResponse(self):
+        dateForResponse = datetime.now() + timedelta(hours=720)
+        self.dateResponse = dateForResponse
+        self.status = "Wait"
 
     class Meta:
         ordering = ['-created']
@@ -77,3 +85,10 @@ class Commets(models.Model):
         if self.file:
             return self.file.name.split('/')[-1]
         return None
+
+class ResponsePQRS(models.Model):
+    pqrs = models.ForeignKey(PQRS, on_delete=models.SET_NULL, null=True, blank=True)
+    response = models.CharField(max_length=1000)
+    response_by = models.CharField(max_length=200)
+    file = models.FileField(null=True, blank=True, upload_to='files/responses')
+    date = models.DateTimeField(auto_now_add=True)

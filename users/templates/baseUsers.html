@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 {% load django_browser_reload %}
@@ -28,6 +29,14 @@
                     {% include "icons/closeCases.html" %}
                     <p>Casos Cerrados</p>
                 </a>
+                <a 
+                href="{% url 'waitingpqrs' %}"
+                class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
+                  {% include "icons/wait.html" %}
+                  <p>Casos en Espera</p>
+              </a>
+                
                 <a 
                   href="{% url 'expiredpqrs' %}"
                   class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
@@ -74,9 +83,9 @@
         {% endif %}
     </aside>
 
-    <main class="w-4/5 bg-gray-100 flex flex-col h-screen">
+    <main class="w-4/5 flex flex-col h-screen bg-backpqr">
         {% include "header.html" %}
-        <div class="px-10 py-5 h-[90%] w-full overflow-auto">
+        <div class="px-10 py-5 h-[90%] w-full overflow-auto bg-backpqr">
             {% block datas %}
             {% endblock datas %}
         </div>

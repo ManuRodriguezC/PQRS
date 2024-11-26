@@ -3,7 +3,7 @@ from .models import *
 
 @admin.register(PQRS)
 class TypePQRSAdmin(admin.ModelAdmin):
-    list_display = ['typePQRS', 'created', 'timeResponse', 'userCreated']
+    list_display = ['num', 'typePQRS', 'timeResponse', 'status']
 
 @admin.register(Commets)
 class CommentsAdmin(admin.ModelAdmin):
@@ -12,3 +12,7 @@ class CommentsAdmin(admin.ModelAdmin):
 @admin.register(Files)
 class FilesAdmin(admin.ModelAdmin):
     list_display = ['pqrs', 'file', 'created']
+    
+@admin.register(ResponsePQRS)
+class ResponsesPQRSAdmin(admin.ModelAdmin):
+    list_display = ['pqrs', 'file', 'response']

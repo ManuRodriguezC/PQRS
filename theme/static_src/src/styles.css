@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.rep {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.rep label {
+    color: rgb(218, 218, 218);
+    font-size: 14px;
+}
+
+.restart input, .rep input {
+    border-radius: 30px;
+    width: 100%;
+    color: black;
+}
+
+.rep ul {
+    padding: 0px 30px;
+    list-style: disc;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}

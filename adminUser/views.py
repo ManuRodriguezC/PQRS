@@ -76,6 +76,7 @@ def users(request):
             user.save()
             
             email = formUser.cleaned_data.get('email')
+            
             message = f"Hola {user.username},\n\nTu cuenta ha sido creada con éxito al modulo de PQRS Cootratiempo.\n\nTu correo es {email}\nTu contraseña es: {password}\n\nSi deseas cambiar tu contraseña ingresa en olvide contraseña."
             email_message = EmailMessage(
                 subject='Tu cuenta ha sido creada',

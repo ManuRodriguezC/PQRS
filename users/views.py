@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage
 from .models import PQRS, Commets, Files
+from adminUser.models import TypesPQRS
 from django.http import HttpResponseRedirect, Http404
-from .forms import PQRSCreateForm, CommentForm, SearchForm, FileFormSet, ResponsePQRSForm
-from django.db.models import Q
+from .forms import *
 
 @login_required
 def openPQRS(request):
@@ -14,7 +14,7 @@ def openPQRS(request):
     if userType.is_staff:
         openPQRS = PQRS.objects.filter(status="Open")
     else:
-        openPQRS = PQRS.objects.filter(typePQRS__area_redirect=userType.area, status="Open")
+        openPQRS = PQRS.objects.filter(areas__icontains=userType.area, status="Open")
 
     if request.method == "POST":
         formSearch = SearchForm(request.POST)
@@ -28,7 +28,7 @@ def openPQRS(request):
                     openPQRS = openPQRS.filter(num=search)
                 formSearch = SearchForm()
 
-    paginator = Paginator(openPQRS, 10)
+    paginator = Paginator(openPQRS, 5)
     page_number = request.GET.get('page', 1)
     try:
         pqrs_open = paginator.page(page_number)
@@ -44,7 +44,7 @@ def closePQRS(request):
     if userType.is_staff:
         closePQRS = PQRS.objects.filter(status="Close")
     else:
-        closePQRS = PQRS.objects.filter(typePQRS__area_redirect=userType.area, status="Close")
+        closePQRS = PQRS.objects.filter(areas__icontains=userType.area, status="Close")
     
     if request.method == 'POST':
         formSearch = SearchForm(request.POST)
@@ -53,12 +53,12 @@ def closePQRS(request):
             if search:
                 try:
                     search_int = int(search)
-                    closePQRS = openPQRS.filter(asociado=search_int)
+                    closePQRS = closePQRS.filter(asociado=search_int)
                 except ValueError:
-                    closePQRS = openPQRS.filter(num=search)
+                    closePQRS = closePQRS.filter(num=search)
                 formSearch = SearchForm()
                 
-    paginator = Paginator(closePQRS, 10)
+    paginator = Paginator(closePQRS, 5)
     page_number = request.GET.get('page', 1)
     try:
         pqrs_close = paginator.page(page_number)
@@ -73,7 +73,7 @@ def expiredPQRS(request):
     if userType.is_staff:
         expirePQRS = PQRS.objects.filter(status="Expired")
     else:
-        expirePQRS = PQRS.objects.filter(typePQRS__area_redirect=userType.area, status="Expired")
+        expirePQRS = PQRS.objects.filter(areas__icontains=userType.area, status="Expired")
         
     if request.method == 'POST':
         formSearch = SearchForm(request.POST)
@@ -87,7 +87,7 @@ def expiredPQRS(request):
                     expirePQRS = openPQRS.filter(num=search)
                 formSearch = SearchForm()
     
-    paginator = Paginator(expirePQRS, 10)
+    paginator = Paginator(expirePQRS, 5)
     page_number = request.GET.get('page', 1)
     try:
         pqrs_expired = paginator.page(page_number)
@@ -102,7 +102,7 @@ def waitResponsePQRS(request):
     if userType.is_staff:
         waitPQRS = PQRS.objects.filter(status="Wait")
     else:
-        waitPQRS = PQRS.objects.filter(typePQRS__area_redirect=userType.area, status="Wait")
+        waitPQRS = PQRS.objects.filter(areas__icontains=userType.area, status="Wait")
         
     if request.method == 'POST':
         formSearch = SearchForm(request.POST)
@@ -111,18 +111,47 @@ def waitResponsePQRS(request):
             if search:
                 try:
                     search_int = int(search)
-                    waitPQRS = openPQRS.filter(asociado=search_int)
+                    waitPQRS = waitPQRS.filter(asociado=search_int)
                 except ValueError:
-                    waitPQRS = openPQRS.filter(num=search)
+                    waitPQRS = waitPQRS.filter(num=search)
                 formSearch = SearchForm()
     
-    paginator = Paginator(waitPQRS, 10)
+    paginator = Paginator(waitPQRS, 5)
     page_number = request.GET.get('page', 1)
     try:
         pqrs_wait = paginator.page(page_number)
     except EmptyPage:
         return HttpResponseRedirect(f"{request.path}?page=1")
     return render(request, 'wait_pqrs.html', {'pqrs': pqrs_wait, 'formSearch': formSearch})
+
+@login_required
+def closeForUserPQRS(request):
+    formSearch = SearchForm()
+    userType = request.user
+    if userType.is_staff:
+        closedForUser = PQRS.objects.filter(status="CloseForUser")
+    else:
+        closedForUser = PQRS.objects.filter(areas__icontains=userType.area, status="CloseForUser")
+        
+    if request.method == 'POST':
+        formSearch = SearchForm(request.POST)
+        if formSearch.is_valid():
+            search = formSearch.cleaned_data.get('search')
+            if search:
+                try:
+                    search_int = int(search)
+                    closedForUser = closedForUser.filter(asociado=search_int)
+                except ValueError:
+                    closedForUser = closedForUser.filter(num=search)
+                formSearch = SearchForm()
+    
+    paginator = Paginator(closedForUser, 5)
+    page_number = request.GET.get('page', 1)
+    try:
+        pqrs_closed_for_user = paginator.page(page_number)
+    except EmptyPage:
+        return HttpResponseRedirect(f"{request.path}?page=1")
+    return render(request, 'closeUser_pqrs.html', {'pqrs': pqrs_closed_for_user, 'formSearch': formSearch})
 
 @login_required
 def createdPQRS(request):
@@ -156,8 +185,11 @@ def pqrs(request, num):
     except Http404:
         return redirect("home")
     
-    if find_pqrs.typePQRS.area_redirect != request.user.area and not request.user.is_staff:
+    listAreas = find_pqrs.areas.split(",")
+    if str(request.user.area) not in listAreas and not request.user.is_staff:
         return redirect("home")
+
+    formShare = ShareForm(areas=find_pqrs.areas)
 
     comments = Commets.objects.filter(pqrs=find_pqrs)
     files = Files.objects.filter(pqrs=find_pqrs)
@@ -175,10 +207,19 @@ def pqrs(request, num):
                 formResponse.save(user=request.user, pqrs=find_pqrs)
                 return redirect('home')
 
+        if 'submit_share' in request.POST:
+            formShare = ShareForm(data=request.POST, areas=find_pqrs.areas)
+            if formShare.is_valid():
+                formShare.process(find_pqrs)
+                find_pqrs.save()
+                return redirect('findpqrs', num=num)
+                
+
     return render(request, 'pqrs.html', {
         'pqrs': find_pqrs,
         'formComment': formComment,
         'formResponse': formResponse,
+        'formShare': formShare,
         'comments': comments,
         'files': files
     })
@@ -192,10 +233,33 @@ def closedPQRS(request, num):
     except Http404:
         return redirect('home')
 
-@login_required
-def sendResponse(request, num):
-    pqrs = get_object_or_404(PQRS, num=num)
+def checkSuccessfull(request, num, token):
     try:
-        return redirect('home')
+        pqrs = get_object_or_404(PQRS, num=num, tokenControl=token)
+        if pqrs.status != "Wait":
+            print("Ya se cerro el caso")
+            return redirect('success')
+        pqrs.closedForUser()
+        pqrs.save()
+        
+        return redirect('success')
     except Http404:
-        return redirect('home')
+        return render(request, '404.html', status=404)
+
+def checkBad(request, num, token):
+    try:
+        pqrs = get_object_or_404(PQRS, num=num, tokenControl=token)
+        if pqrs != "Wait":
+            return redirect('success')
+        pqrs.status = 'Open'
+        pqrs.tokenControl = ""
+        pqrs.save()
+        return redirect('failed')
+    except Http404:
+        return render(request, '404.html', status=404)
+
+def success(request):
+    return render(request, 'successfull.html')
+
+def failed(request):
+    return render(request, 'failed.html')

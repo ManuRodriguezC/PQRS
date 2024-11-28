@@ -4,15 +4,20 @@
 {% block content %}
 {% load django_browser_reload %}
 <body class="flex w-full h-screen overflow-hidden">
-    <aside class="w-1/5 bg-cootra text-white p-4 h-full">
-        <div class="flex flex-row justify-between items-center p-3">
+    <aside id="aside" class="relative w-1/5 bg-backlogin text-white p-4 h-full transition-all duration-200">
+      <button id="bt-control" class="absolute -right-4 top-20 bg-white border-2 border-cootra rounded-full transition-all duration-200">
+        {% include "icons/arrowLeft.html" %}
+      </button>
+      
+        <div id="topper" class="flex flex-row justify-between items-center p-3">
             <div class="flex flex-row justify-center items-center">
                 <p class="text-xl text-white">{{ request.user.username }}</p>
                 {% include "icons/user.html" %}
             </div>
             <p class="text-sm text-gray-400">pqrs v.1</p>
         </div>
-        <div class="flex flex-col px-5 py-7">
+
+        <div id="section-1" class="flex flex-col px-5 py-7">
             <p class="text-base text-white font-semibold underline underline-offset-4">General</p>
             <div class="text-base flex flex-col gap-4 mt-5">
                 <a 
@@ -23,6 +28,13 @@
                     <p>Casos Abiertos</p>
                 </a>
                 <a 
+                  href="{% url 'waitingpqrs' %}"
+                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
+                    {% include "icons/wait.html" %}
+                    <p>Casos en Espera</p>
+                </a>
+                <a 
                   href="{% url 'closedpqrs' %}"
                   class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
                   border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
@@ -30,12 +42,12 @@
                     <p>Casos Cerrados</p>
                 </a>
                 <a 
-                href="{% url 'waitingpqrs' %}"
-                class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
-                border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
-                  {% include "icons/wait.html" %}
-                  <p>Casos en Espera</p>
-              </a>
+                  href="{% url 'closedforuserpqrs' %}"
+                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
+                    {% include "icons/closeCases.html" %}
+                    <p>Cerrados por Asociado</p>
+                </a>
                 
                 <a 
                   href="{% url 'expiredpqrs' %}"
@@ -47,7 +59,7 @@
             </div>
         </div>
         {% if request.user.is_staff %}
-        <div class="flex flex-col px-5 py-7">
+        <div  id="section-2" class="flex flex-col px-5 py-7">
             <p class="text-base text-white font-semibold underline underline-offset-4">Administrador</p>
             <div class="text-base flex flex-col gap-4 mt-5">
                 <a 
@@ -83,12 +95,60 @@
         {% endif %}
     </aside>
 
-    <main class="w-4/5 flex flex-col h-screen bg-backpqr">
+    <main id="main" class="w-4/5 flex flex-col h-screen bg-backpqr transition-all duration-200">
         {% include "header.html" %}
-        <div class="px-10 py-5 h-[90%] w-full overflow-auto bg-backpqr">
+        <div class="px-10 py-5 h-[90%] w-full overflow-auto">
             {% block datas %}
             {% endblock datas %}
         </div>
     </main>
 </body>
+
+<script>
+  const topper = document.getElementById('topper')
+  const section1 = document.getElementById('section-1')
+  const section2 = document.getElementById('section-2')
+
+  const button = document.getElementById('bt-control')
+  const aside = document.getElementById('aside')
+  const main = document.getElementById('main')
+
+
+  function control() {
+    if (topper.classList.contains('invisible')) {
+      aside.classList.toggle('w-1/5')
+      aside.classList.toggle('w-5')
+      main.classList.toggle('w-4/5')
+      main.classList.toggle('w-full')
+      button.classList.toggle('rotate-180')
+      
+      setTimeout(function() {
+        topper.classList.toggle('invisible')
+        section1.classList.toggle('invisible')
+        section2.classList.toggle('invisible')
+        
+      }, 80)
+    } else {
+      button.classList.toggle('rotate-180')
+      topper.classList.toggle('invisible')
+      section1.classList.toggle('invisible')
+      section2.classList.toggle('invisible')
+      
+      setTimeout(function() {
+        
+        aside.classList.toggle('w-1/5')
+        aside.classList.toggle('w-5')
+        main.classList.toggle('w-4/5')
+        main.classList.toggle('w-full')
+      }, 130)
+    }
+  }
+
+  button.addEventListener('click', control)
+
+
+</script>
+
 {% endblock content %}
+
+

@@ -12,6 +12,16 @@
                     <p class="text-2xl">Estado: {{ pqrs.status }}</p>
                     <p>Fecha Creación: {{pqrs.created}}</p>
                     <p>Fecha Vencimiento: {{pqrs.timeResponse}}</p>
+                    {% if pqrs.status == "Open" %}
+                        <div>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="submit_share" value="1">
+                                {{ formShare.as_p }}
+                                <button type="submit">Compartir</button>
+                            </form>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="flex flex-col relative mt-3">
@@ -128,16 +138,21 @@
                     <h3 class="text-cootra text-2xl mb-2">Comentarios o respuestas adjuntadas</h3>
                     <ul class="flex flex-col gap-5">
                         {% for comment in comments %}
-                        <li class="relative flex flex-col border-2 border-gray-500/50 rounded-lg p-3 pb-6 shadow-2xl">
-                            <p class="text-base font-semibold">Comentario:</p>
-                            <p class="text-base text-gray-600">{{comment.coment}}</p>
-                            <p class="absolute bottom-2 right-2 italic">Creada por: {{comment.created_by}}</p>
+                        <li class="relative flex flex-row gap-5 border-2 border-gray-500/50 rounded-lg p-3 pb-6 shadow-2xl">
+                            <div class="w-[65%]">
+                                <p class="text-base font-semibold">Comentario:</p>
+                                <p class="text-base text-gray-600">{{comment.coment}}</p>
+
+                            </div>
                             {% if comment.file %}
+                            <div class="w-[25%]">
                                 <p class="text-base font-semibold mt-4">Archivo adjunto:</p>
                                 <a class="text-cootra hover:underline underline-offset-1 transition-all duration-200"
-                                    href="{{ comment.file.url }}"
-                                    target="_blank">- {{comment.nameFile }}</a>
+                                href="{{ comment.file.url }}"
+                                target="_blank">- {{comment.nameFile }}</a>
+                            </div>
                             {% endif %}
+                            <p class="absolute bottom-2 right-2 italic">Creada por: {{comment.created_by}}</p>
                         </li>
                         {% endfor %}
                     </ul>
@@ -167,9 +182,10 @@
         }
 
         function closeDialog() {
-            console.log("test")
-            dialog.classList.add('hidden');
             backdrop.classList.add('hidden');
+            dialog.classList.add('hidden');
+            dialogResponse.classList.add('hidden');
+
         }
 
         function openDialogResponse() {
@@ -178,16 +194,11 @@
             backdrop.classList.remove('hidden')
         }
 
-        function closeDialogResponse() {
-            dialogResponse.classList.add('hidden');
-            backdrop.classList.add('hidden');
-        }
-
         backdrop.addEventListener('click', closeDialog);
         closeDialogButton.addEventListener('click', closeDialog);
         openDialogButton.addEventListener('click', openDialog);
 
-        closeDialogResponseButton.addEventListener('click', closeDialogResponse);
+        closeDialogResponseButton.addEventListener('click', closeDialog);
         openDialogResponseButton.addEventListener('click', openDialogResponse);
 
     </script>

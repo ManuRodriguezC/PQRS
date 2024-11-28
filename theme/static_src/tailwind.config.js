@@ -28,6 +28,9 @@ module.exports = {
             },
             scale: {
                 '102': '1.02'
+            },
+            screen: {
+                'ss': '30px'
             }
           },
     },

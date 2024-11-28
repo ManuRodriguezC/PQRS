@@ -2,6 +2,9 @@ from django.db import models
 from adminUser.models import *
 from datetime import timedelta, datetime
 from django.utils import timezone
+import uuid
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 class PQRSManager(models.Manager):
     def get_queryset(self):
@@ -15,8 +18,9 @@ class PQRS(models.Model):
     """"""
     num = models.CharField(max_length=20)
     typePQRS = models.ForeignKey(TypesPQRS, on_delete=models.CASCADE)
+    areas = models.CharField(max_length=1000, null=True, blank=True)
     name = models.CharField(max_length=200)
-    asociado = models.IntegerField(null=True, blank=True)
+    asociado = models.IntegerField()
     email = models.EmailField()
     phone = models.IntegerField()
     description = models.CharField(max_length=1000)
@@ -35,6 +39,7 @@ class PQRS(models.Model):
         if self.typePQRS and not self.timeResponse:
             dateEnd = datetime.now() + timedelta(hours=self.typePQRS.timeExecute)
             self.timeResponse = timezone.make_aware(dateEnd, timezone.get_current_timezone())
+            self.areas = self.typePQRS.name
         
         if not self.num:
             super().save(*args, **kwargs)
@@ -45,7 +50,11 @@ class PQRS(models.Model):
     def check_time_response(self):
         if self.timeResponse and self.timeResponse < timezone.now() and self.status == "Open":
             self.status = "Expired"
-            self.closed = datetime.now()
+            self.closed = timezone.now()
+            self.save()
+        if self.dateResponse and self.dateResponse < timezone.now() and self.status == "Wait":
+            self.status = "Close"
+            self.closed = timezone.now()
             self.save()
 
     def closePQRS(self, user, *args, **kwargs):
@@ -54,10 +63,46 @@ class PQRS(models.Model):
         self.closed = datetime.now()
         super(PQRS, self).save(*args, **kwargs)
     
-    def waitingForResponse(self):
+    def closedForUser(self, *args, **kwargs):
+        self.status = "CloseForUser"
+        self.closed = datetime.now()
+        super(PQRS, self).save(*args, **kwargs)
+    
+    def waitingForResponse(self, response, file):
         dateForResponse = datetime.now() + timedelta(hours=720)
         self.dateResponse = dateForResponse
         self.status = "Wait"
+        token = uuid.uuid4()
+        self.tokenControl = token
+        num = self.num
+        email = self.email
+        
+        message = f"""
+        Hola {self.name}.\n
+        
+        Esperamos tu solicitud {self.typePQRS} haya finalizado de forma satisfactoria.\n
+        
+        {response}\n
+        
+        Te invitamos a que nos cuentes si finalizo de forma exitosa o no se dio solucion a tu solicitud.\n
+        
+        Si se dio solucion da click en el siguiente link: http://127.0.0.1:8000/solicitud-pqrs/{num}/{token}/ \n
+        
+        En caso de no haber dado solucion da click en el siguiente link para darle seguimiento: http://127.0.0.1:8000/solicitud-finalizada-sin-exito/{num}/{token}/.
+        \n\n
+        Gracias!
+        """
+        
+        email_message = EmailMessage(
+            subject=f'Respuesta Solicitud {self.typePQRS}',
+            body=message,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[email],
+            )
+        if file:
+            email_message.attach(file.name, file.read(), file.content_type)
+
+        email_message.send()
 
     class Meta:
         ordering = ['-created']

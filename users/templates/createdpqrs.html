@@ -2,24 +2,42 @@
 {% load static %}
 
 {% block datas %}
-    <section class="border-2 border-gray-600">
+    <section class="flex flex-col gap-5">
         <h2 class="text-3xl text-cootra font-semibold">Crear PQRS</h2>
-        <form method="POST" enctype="multipart/form-data">
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+            class="w-full flex flex-col gap-5 border-2 border-gray-600 p-5 rounded-2xl shadow-2xl bg-black/10">
             {% csrf_token %}
-            {{ pqrs_form.as_p }}
-            
-            <h3>Archivos:</h3>
-            {{ file_formset.management_form }}
-            <div id="file-forms">
-                {% for form in file_formset %}
-                    <div class="form-row">
-                        {{ form.as_p }}
+
+            <div class="w-full grid grid-cols-2 gap-x-20 gap-y-5">
+                {% for field in pqrs_form %}
+                    <div class="w-full flex flex-col">
+                        <label class="text-gray-700 text-base font-semibold" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
                     </div>
                 {% endfor %}
             </div>
-            <button type="button" id="add-file-form">Agregar archivo</button>
+            
+            <div class="flex flex-col gap-3 text-sm">
+                <h3 class="text-xl text-cootra font-bold">Archivos:</h3>
+                {{ file_formset.management_form }}
+                <div id="file-forms" class="flex flex-wrap gap-4">
+                    {% for form in file_formset %}
+                        <div id="form-row" class="flex flex-col">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <button
+                    type="button"
+                    id="add-file-form"
+                    class="w-52 bg-blue-400 text-white rounded-md px-4 py-1 hover:bg-blue-500 transition-all duration-200">
+                    Agregar nuevo archivo
+                </button>
+            </div>
             <br>
-            <button type="submit">Crear PQRS</button>
+            <button type="submit" class="bg-cootra py-2 px-4 text-xl w-60 text-white rounded-md hover:scale-102 transition-all duration-200">Crear PQRS</button>
         </form>
     </section>
 

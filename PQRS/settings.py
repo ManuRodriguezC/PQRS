@@ -142,8 +142,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'estebanclimb@gmail.com'
-EMAIL_HOST_PASSWORD = 'site mown gkdv dqmt'
+EMAIL_HOST_USER = 'credito.cootratiempo@gmail.com'
+EMAIL_HOST_PASSWORD = 'jgso ocnu hdvu evam'
 EMAIL_POST = 587
 EMAIL_USE_TLS = True
 

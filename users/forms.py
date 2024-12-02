@@ -4,6 +4,7 @@ from account.models import CustumUser
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.forms.models import inlineformset_factory
+from django.template.loader import render_to_string
 from adminUser.models import Areas
 
 class PQRSCreateForm(forms.ModelForm):
@@ -53,21 +54,32 @@ class PQRSCreateForm(forms.ModelForm):
         if commit:
             instance.save(*args, **kwargs)
         allUsersArea = CustumUser.objects.filter(area=instance.typePQRS.area_redirect)
+        
         emails = [user.email for user in allUsersArea]
+        
         url = f"http:127.0.0.1:8000/pqrs/{instance.num}"
-        messageText = f"""
-            Hola, se ha generado una PQRS de {instance.typePQRS}.\n
-            Por favor revise su bandeja en PQRS abiertas para darle seguimiento,
-            o ingrese al siguiente link: {url}
-        """
-        message = messageText
-        title = f"PQRS - {instance.typePQRS} a sido creada"
+        
+        html_message = render_to_string('emails/createpqrs.html', {
+            'pqrs': instance.typePQRS,
+            'url': url
+        })
+        
+        # messageText = f"""
+        #     Hola, se ha generado una PQRS de {instance.typePQRS}.\n
+        #     Por favor revise su bandeja en PQRS abiertas para darle seguimiento,
+        #     o ingrese al siguiente link: {url}
+        # """
+        # message = messageText
+        # title = f"PQRS - {instance.typePQRS} a sido creada"
+        
         email_message = EmailMessage(
-            subject=title,
-            body=message,
-            from_email=settings.EMAIL_HOST_USER,
-            to=emails
+            f"PQRS Generada - {instance.typePQRS}",
+            html_message,
+            settings.EMAIL_HOST_USER,
+            emails
         )
+        email_message.content_subtype = 'html'
+        
         email_message.send()
         return instance
 

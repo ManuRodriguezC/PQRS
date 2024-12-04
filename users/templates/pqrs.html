@@ -13,12 +13,14 @@
                     <p>Fecha Creación: {{pqrs.created}}</p>
                     <p>Fecha Vencimiento: {{pqrs.timeResponse}}</p>
                     {% if pqrs.status == "Open" %}
-                        <div>
-                            <form method="POST">
+                        <div class="flex flex-col justify-end bg-blue-100 items-end rounded-lg px-5 py-2 border-[1px] border-gray-500">
+                            <form method="POST" class="flex flex-row justify-end w-[450px]">
                                 {% csrf_token %}
                                 <input type="hidden" name="submit_share" value="1">
                                 {{ formShare.as_p }}
-                                <button type="submit">Compartir</button>
+                                <button type="submit"
+                                    class="bg-cootra hover:opacity-85 transition-all duration-200 text-white text-sm shadow-xl px-2 rounded-lg">
+                                Compartir</button>
                             </form>
                         </div>
                     {% endif %}

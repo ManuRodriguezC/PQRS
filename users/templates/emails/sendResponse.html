@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Respuesta PQRS</title>
+</head>
+<body style="width: 600px; height: auto; background-color: #f4f8ff; padding: 20px; font-family: Arial, sans-serif; color: #333;">
+    <div style="display: flex; flex-direction: column; align-items: center; background-color: #3255a0; padding: 20px; border-radius: 8px;">
+        <h1 style="color: white; font-size: 18px; text-align: center; margin: 0;">
+            Hola {{ name }}.
+        </h1>
+    </div>
+    <div style="margin-top: 20px; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <p style="font-size: 14px; line-height: 1.6;">
+            Esperamos que tu solicitud <strong>{{ type }}</strong> haya finalizado de forma satisfactoria.
+        </p>
+        <p style="font-size: 14px; line-height: 1.6;">
+            {{ response }}
+        </p>
+        <p style="font-size: 14px; line-height: 1.6;">
+            Te invitamos a que nos cuentes si finalizó de forma exitosa o no se dio solución a tu solicitud.
+        </p>
+        <p style="font-size: 14px; line-height: 1.6; margin-top: 20px;">
+            <strong>Si se dio solución:</strong> da clic en el siguiente enlace: 
+            <a href="{{ si }}" style="color: #3255a0; text-decoration: none; font-weight: bold;">Exitosa!</a>
+        </p>
+        <p style="font-size: 14px; line-height: 1.6; margin-top: 10px;">
+            <strong>Si no se dio solución:</strong> da clic en el siguiente enlace para darle seguimiento: 
+            <a href="{{ no }}" style="color: #d9534f; text-decoration: none; font-weight: bold;">Seguimiento</a>
+        </p>
+    </div>
+    <footer style="margin-top: 20px; text-align: center; font-size: 12px; color: #777;">
+        Gracias por confiar en nosotros. Si tienes alguna pregunta, contáctanos.
+    </footer>
+</body>
+
+</html>

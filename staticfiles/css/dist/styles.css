@@ -891,6 +891,10 @@ select {
   margin: 1rem;
 }
 
+.m-1 {
+  margin: 0.25rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -956,6 +960,10 @@ select {
   margin-top: 1.5rem;
 }
 
+.mt-10 {
+  margin-top: 2.5rem;
+}
+
 .block {
   display: block;
 }
@@ -992,10 +1000,6 @@ select {
   height: 1.5rem;
 }
 
-.h-\[100\%\] {
-  height: 100%;
-}
-
 .h-\[2px\] {
   height: 2px;
 }
@@ -1022,6 +1026,10 @@ select {
 
 .h-screen {
   height: 100vh;
+}
+
+.max-h-\[100\%\] {
+  max-height: 100%;
 }
 
 .max-h-\[85\%\] {
@@ -1150,6 +1158,42 @@ select {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-\[80\] {
+  width: 80;
+}
+
+.w-\[80\%\%\] {
+  width: 80%%;
+}
+
+.w-\[80\%\] {
+  width: 80%;
+}
+
+.w-\[20\] {
+  width: 20;
+}
+
+.w-\[14\%\] {
+  width: 14%;
+}
+
+.w-\[350px\] {
+  width: 350px;
+}
+
+.w-\[30px\] {
+  width: 30px;
+}
+
+.w-\[330px\] {
+  width: 330px;
+}
+
+.w-\[450px\] {
+  width: 450px;
 }
 
 .border-collapse {
@@ -1432,6 +1476,38 @@ select {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
+.bg-black\/5 {
+  background-color: rgb(0 0 0 / 0.05);
+}
+
+.bg-black\/50 {
+  background-color: rgb(0 0 0 / 0.5);
+}
+
+.bg-red-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity));
+}
+
+.bg-black\/20 {
+  background-color: rgb(0 0 0 / 0.2);
+}
+
+.bg-blue-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+}
+
+.bg-blue-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
+}
+
 .bg-backlogin {
   background-image: radial-gradient(circle at 19% 90%, rgba(190, 190, 190,0.04) 0%, rgba(190, 190, 190,0.04) 17%,transparent 17%, transparent 100%),radial-gradient(circle at 73% 2%, rgba(78, 78, 78,0.04) 0%, rgba(78, 78, 78,0.04) 94%,transparent 94%, transparent 100%),radial-gradient(circle at 45% 2%, rgba(18, 18, 18,0.04) 0%, rgba(18, 18, 18,0.04) 55%,transparent 55%, transparent 100%),radial-gradient(circle at 76% 60%, rgba(110, 110, 110,0.04) 0%, rgba(110, 110, 110,0.04) 34%,transparent 34%, transparent 100%),radial-gradient(circle at 68% 56%, rgba(246, 246, 246,0.04) 0%, rgba(246, 246, 246,0.04) 16%,transparent 16%, transparent 100%),radial-gradient(circle at 71% 42%, rgba(156, 156, 156,0.04) 0%, rgba(156, 156, 156,0.04) 47%,transparent 47%, transparent 100%),radial-gradient(circle at 46% 82%, rgba(247, 247, 247,0.04) 0%, rgba(247, 247, 247,0.04) 39%,transparent 39%, transparent 100%),radial-gradient(circle at 50% 47%, rgba(209, 209, 209,0.04) 0%, rgba(209, 209, 209,0.04) 45%,transparent 45%, transparent 100%),linear-gradient(90deg, rgb(23,0,90),rgb(23,2,147));;
 }
@@ -1514,6 +1590,11 @@ select {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .pb-10 {
@@ -1659,6 +1740,11 @@ select {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -1764,6 +1850,12 @@ select {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.test {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .before\:absolute::before {

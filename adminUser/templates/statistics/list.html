@@ -1,23 +1,29 @@
 {% extends "baseUsers.html" %}
 
 {% block datas %}
-    <h3>Estadisticas Usuarios</h3>
-    <table>
-        <tr>
-            <th>Usuario</th>
-            <th>Creadas</th>
-            <th>Abiertas</th>
-            <th>Finalizadas</th>
-            <th>Vencidas</th>
-        </tr>
+<div>
+    <h3 class="text-2xl text-cootra font-bold mb-4">Estadisticas Usuarios</h3>
+    <div class="bg-black/10 rounded-xl w-full flex flex-col p-4 gap-2">
+        <div class="w-full flex flex-row justify-around items-center">
+            <p class="w-[14%] text-center font-semibold flex justify-center items-center">Usuario</p>
+            <p class="w-[14%] text-center font-semibold flex justify-center items-center">Creadas</p>
+            <p class="w-[14%] text-center font-semibold flex justify-center items-center">Abiertas</p>
+            <p class="w-[14%] text-center font-semibold flex justify-center items-center">Espera</p>
+            <p class="w-[14%] text-center font-semibold flex justify-center items-center">Finalizadas</p>
+            <p class="w-[14%] text-center font-semibold flex justify-center items-center">Finalizadas por Asociado</p>
+            <p class="w-[14%] text-center font-semibold flex justify-center items-center">Vencidas</p>
+        </div>
         {% for user in users %}
-        <tr>
-            <td>{{ user.user }}</td>
-            <td>{{ user.pqrsCreated }}</td>
-            <td>{{ user.pqrsOpen }}</td>
-            <td>{{ user.pqrsClose }}</td>
-            <td>{{ user.pqrsExpired }}</td>
-        </tr>
+        <div class="bg-white w-full flex flex-row justify-around items-center rounded-xl">
+            <p class="w-[14%] flex justify-center items-center">{{ user.user }}</p>
+            <p class="w-[14%] flex justify-center items-center">{{ user.pqrsCreated }}</p>
+            <p class="w-[14%] flex justify-center items-center">{{ user.pqrsOpen }}</p>
+            <p class="w-[14%] flex justify-center items-center">{{ user.pqrsWait }}</p>
+            <p class="w-[14%] flex justify-center items-center">{{ user.pqrsClose }}</p>
+            <p class="w-[14%] flex justify-center items-center">{{ user.pqrsCloseForUser }}</p>
+            <p class="w-[14%] flex justify-center items-center">{{ user.pqrsExpired }}</p>
+        </div>
         {% endfor %}
-    </table>
+    </div>
+</div>
 {% endblock datas %}

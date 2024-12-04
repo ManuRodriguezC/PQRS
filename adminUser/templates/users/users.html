@@ -50,21 +50,32 @@
             </div>
         </div>
 
-        <div class="w-screen h-screen flex flex-col justify-between">
+        <div class="flex flex-col justify-between">
             <div id="backdrop" class="hidden fixed inset-0 w-sreen h-screen bg-black/30 z-20
             backdrop-blur-sm"></div>
             
             <dialog
                 id="dialog"
-                class="hidden w-sreen h-[80%] inset-0 flex-col items-center justify-center rounded-xl z-50
+                class="hidden w-[80%] h-[80%] inset-0 flex-col items-center justify-center rounded-xl z-50
                 border-2 border-gray-500 shadow-2xl px-20 py-8">
                 <button id="close-dialog" class="absolute top-3 right-3">
                     {% include "icons/close.html" %}
                 </button>
-                <h2>Crear nuevo Usuario</h2>
-                <form method="POST">
-                    {% csrf_token %} {{formUser.as_p}}
-                    <button type="submit">Crear Usuario</button>
+                <h2 class="text-2xl text-cootra font-semibold">Crear nuevo Usuario</h2>
+                <form method="POST" class="w-full my-10 flex flex-col justify-center ">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-2 gap-5">
+                        {% for field in formUser %}
+                            <div class="w-full flex flex-col">
+                                <label class="text-gray-700 text-base font-semibold" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="text-gray-500 text-sm">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="bg-cootra text-white px-6 py-2 rounded-lg hover:scale-102 transition-all duration-200 mt-10" type="submit">Crear Usuario</button>
                 </form>
                 {% if errors %}
                 <ul class="errorlist">

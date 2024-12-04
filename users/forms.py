@@ -57,7 +57,7 @@ class PQRSCreateForm(forms.ModelForm):
         
         emails = [user.email for user in allUsersArea]
         
-        url = f"http:127.0.0.1:8000/pqrs/{instance.num}"
+        url = f"http://127.0.0.1:8000/pqrs/{instance.num}"
         
         html_message = render_to_string('emails/createpqrs.html', {
             'pqrs': instance.typePQRS,

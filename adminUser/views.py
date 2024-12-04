@@ -77,7 +77,13 @@ def users(request):
             
             email = formUser.cleaned_data.get('email')
             
-            message = f"Hola {user.username},\n\nTu cuenta ha sido creada con éxito al modulo de PQRS Cootratiempo.\n\nTu correo es {email}\nTu contraseña es: {password}\n\nSi deseas cambiar tu contraseña ingresa en olvide contraseña."
+            message = f"""
+                Hola {user.username},\n\n
+                Tu cuenta ha sido creada con éxito al modulo de PQRS Cootratiempo.\n\n
+                Tu nombre de usuario es: {user.username}\n
+                Tu correo es {email}\n
+                Tu contraseña es: {password}\n\n
+                Si deseas cambiar tu contraseña ingresa en olvide contraseña."""
             email_message = EmailMessage(
                 subject='Tu cuenta ha sido creada',
                 body=message,
@@ -113,7 +119,9 @@ def statistics(request):
             "user": user.username,
             "pqrsCreated": PQRS.objects.filter(userCreated=user.username).count(),
             "pqrsOpen": PQRS.objects.filter(status="Open", userCreated=user.username).count(),
+            "pqrsWait": PQRS.objects.filter(status="Wait", userCreated=user.username).count(),
             "pqrsClose": PQRS.objects.filter(status="Close", userCreated=user.username).count(),
+            "pqrsCloseForUser": PQRS.objects.filter(status="CloseForUser", userCreated=user.username).count(),
             "pqrsExpired": PQRS.objects.filter(status="Expired", userCreated=user.username).count(),
         }
         for user in usersActives]

@@ -4,6 +4,7 @@ from datetime import timedelta, datetime
 from django.utils import timezone
 import uuid
 from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 from django.conf import settings
 
 class PQRSManager(models.Manager):
@@ -77,31 +78,40 @@ class PQRS(models.Model):
         num = self.num
         email = self.email
         
-        message = f"""
-        Hola {self.name}.\n
+        # message = f"""
+        # Hola {self.name}.\n
         
-        Esperamos tu solicitud {self.typePQRS} haya finalizado de forma satisfactoria.\n
+        # Esperamos tu solicitud {self.typePQRS} haya finalizado de forma satisfactoria.\n
         
-        {response}\n
+        # {response}\n
         
-        Te invitamos a que nos cuentes si finalizo de forma exitosa o no se dio solucion a tu solicitud.\n
+        # Te invitamos a que nos cuentes si finalizo de forma exitosa o no se dio solucion a tu solicitud.\n
         
-        Si se dio solucion da click en el siguiente link: http://127.0.0.1:8000/solicitud-pqrs/{num}/{token}/ \n
+        # Si se dio solucion da click en el siguiente link: http://127.0.0.1:8000/solicitud-pqrs/{num}/{token}/ \n
         
-        En caso de no haber dado solucion da click en el siguiente link para darle seguimiento: http://127.0.0.1:8000/solicitud-finalizada-sin-exito/{num}/{token}/.
-        \n\n
-        Gracias!
-        """
+        # En caso de no haber dado solucion da click en el siguiente link para darle seguimiento: http://127.0.0.1:8000/solicitud-finalizada-sin-exito/{num}/{token}/.
+        # \n\n
+        # Gracias!
+        # """
+        
+        html_message = render_to_string('emails/sendResponse.html', {
+            'name': self.name,
+            'type': self.typePQRS,
+            'response': response,
+            'si': f"http://127.0.0.1:8000/solicitud-pqrs/{num}/{token}/",
+            'no': f"http://127.0.0.1:8000/solicitud-finalizada-sin-exito/{num}/{token}/"
+        })
         
         email_message = EmailMessage(
-            subject=f'Respuesta Solicitud {self.typePQRS}',
-            body=message,
-            from_email=settings.EMAIL_HOST_USER,
+            f'Respuesta Solicitud {self.typePQRS}',
+            html_message,
+            settings.EMAIL_HOST_USER,
             to=[email],
             )
         if file:
             email_message.attach(file.name, file.read(), file.content_type)
 
+        email_message.content_subtype = 'html'
         email_message.send()
 
     class Meta:

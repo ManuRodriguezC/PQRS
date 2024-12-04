@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-&i5m=m8n%iwjrk@b(0qp_v#itdh7-l+r!0n!#fbay8^!dx-%(*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_browser_reload',
+    # 'django_browser_reload',
     'tailwind',
     'theme',
 ]
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 TAILWIND_APP_NAME = 'theme'
 
 INTERNAL_IPS = [
-    "127.0.0.1",
+    "***.****.****",
 ]
 
 MIDDLEWARE = [
@@ -54,8 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
-    
+    # 'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'PQRS.urls'
@@ -125,13 +124,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = '/static/'
 
-# Ruta donde se guardan los archivos estáticos (en desarrollo)
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
+
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+# Ruta donde se guardan los archivos estáticos (en desarrollo)
+# if not DEBUG:
+#     import mimetypes
+#     mimetypes.add_type("text/css", ".css", True)
 
 # Ruta donde Django recolectará los archivos estáticos para producción
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

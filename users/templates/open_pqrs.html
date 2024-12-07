@@ -4,6 +4,16 @@
 
 <h2 class="my-4 text-2xl font-semibold text-gray-700">Listado de PQRS Activas</h2>
 
+{% if messages %}
+  <div class="alerts">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} p-4 rounded-lg">
+        <h3 class="text-lg font-bold">{{ message }}</h3>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 <div class="w-full max-h-[85%] border-2 bg-white border-gray-500 rounded-lg overflow-y-auto">
   <ul class="flex flex-row text-base font-semibold bg-gray-300 px-4 py-2 rounded-lg text-center">
     <li class="w-1/6">Numero</li>

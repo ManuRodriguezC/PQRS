@@ -9,6 +9,9 @@
                     <p class="text-xl text-gray-600 my-4">Tipo de Solicitud: <span class="font-bold">{{pqrs.typePQRS}}</span></p>
                 </div>
                 <div class="flex flex-col gap-1 justify-center items-end font-semibold text-gray-600 italic">
+                    {% if pqrs.status == "Open" %}
+                        <a href="{% url 'updatepqrs' pqrs.num%}">Editar</a>
+                    {% endif %}
                     <p class="text-2xl">Estado: {{ pqrs.status }}</p>
                     <p>Fecha Creación: {{pqrs.created}}</p>
                     <p>Fecha Vencimiento: {{pqrs.timeResponse}}</p>
@@ -23,6 +26,15 @@
                                 Compartir</button>
                             </form>
                         </div>
+                        {% if messages %}
+                            <div class="alerts">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} p-4 rounded-lg">
+                                    <h3 class="text-lg font-bold">{{ message }}</h3>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

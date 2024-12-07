@@ -6,6 +6,7 @@ from .views import *
 urlpatterns = [
     path('', openPQRS, name="home"),
     path('crearPQRS/', createdPQRS, name="createdpqrs"),
+    path('actualizar-pqrs/<str:num>', updatePqrs, name="updatepqrs"),
     path('pqrs-cerradas/', closePQRS, name="closedpqrs"),
     path('pqrs-cerradas-por-asociado/', closeForUserPQRS, name="closedforuserpqrs"),
     path('pqrs-expiradas/', expiredPQRS, name="expiredpqrs"),

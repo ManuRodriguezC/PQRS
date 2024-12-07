@@ -6,10 +6,13 @@ from django.core.mail import EmailMessage
 from account.models import CustumUser
 from users.models import PQRS
 from .models import Areas, TypesPQRS
-from .forms import CreateUserForm
+from .forms import CreateUserForm, DateForms
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .decorators import check_superadmin
+import pandas as pd
+from io import BytesIO
+from django.http import HttpResponse
 
 @login_required
 @check_superadmin()
@@ -113,6 +116,46 @@ def updateUser(request, id):
 @login_required
 @check_superadmin()
 def statistics(request):
+    if request.method == 'POST':
+        form = DateForms(request.POST)
+        if form.is_valid():
+            start = form.cleaned_data['dateInit']
+            end = form.cleaned_data['dateEnd']
+            reports = PQRS.objects.filter(created__range=[start, end])
+            data = [{
+                'Numero de pqrs': pqrs.num,
+                'Tipo de pqrs': pqrs.typePQRS,
+                'Nombre': pqrs.name,
+                'Cedula': pqrs.asociado,
+                'Correo': pqrs.email,
+                'Celular': pqrs.phone,
+                # 'Fecha de Creacion': pqrs.created,
+                'Estado': pqrs.status,
+                'Creada por': pqrs.userCreated,
+                'Descripcion': pqrs.description
+            } for pqrs in reports]
+            
+            df = pd.DataFrame(data)
+
+            # Crea un buffer en memoria para el archivo Excel
+            buffer = BytesIO()
+            with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+                df.to_excel(writer, index=False, sheet_name="Reportes")
+
+            # Configura el buffer para lectura
+            buffer.seek(0)
+
+            # Configura la respuesta HTTP para descargar el archivo
+            response = HttpResponse(
+                buffer,
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = 'attachment; filename="Reportes_pqrs.xlsx"'
+
+            return response
+    else:
+        form = DateForms()
+            
     usersActives = CustumUser.objects.filter(is_active=True)
     listUsers = [
         {
@@ -125,4 +168,4 @@ def statistics(request):
             "pqrsExpired": PQRS.objects.filter(status="Expired", userCreated=user.username).count(),
         }
         for user in usersActives]
-    return render(request, 'statistics/list.html', {'users': listUsers})
+    return render(request, 'statistics/list.html', {'users': listUsers, 'form': form})

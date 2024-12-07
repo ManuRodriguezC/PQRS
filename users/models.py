@@ -1,6 +1,7 @@
 from django.db import models
 from adminUser.models import *
 from datetime import timedelta, datetime
+from adminUser.models import TypesPQRS
 from django.utils import timezone
 import uuid
 from django.core.mail import EmailMessage
@@ -40,7 +41,9 @@ class PQRS(models.Model):
         if self.typePQRS and not self.timeResponse:
             dateEnd = datetime.now() + timedelta(hours=self.typePQRS.timeExecute)
             self.timeResponse = timezone.make_aware(dateEnd, timezone.get_current_timezone())
-            self.areas = self.typePQRS.name
+            name_pqrs = self.typePQRS.area_redirect
+            setName = str(name_pqrs)
+            self.areas = setName
         
         if not self.num:
             super().save(*args, **kwargs)
@@ -77,22 +80,6 @@ class PQRS(models.Model):
         self.tokenControl = token
         num = self.num
         email = self.email
-        
-        # message = f"""
-        # Hola {self.name}.\n
-        
-        # Esperamos tu solicitud {self.typePQRS} haya finalizado de forma satisfactoria.\n
-        
-        # {response}\n
-        
-        # Te invitamos a que nos cuentes si finalizo de forma exitosa o no se dio solucion a tu solicitud.\n
-        
-        # Si se dio solucion da click en el siguiente link: http://127.0.0.1:8000/solicitud-pqrs/{num}/{token}/ \n
-        
-        # En caso de no haber dado solucion da click en el siguiente link para darle seguimiento: http://127.0.0.1:8000/solicitud-finalizada-sin-exito/{num}/{token}/.
-        # \n\n
-        # Gracias!
-        # """
         
         html_message = render_to_string('emails/sendResponse.html', {
             'name': self.name,

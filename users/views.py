@@ -4,6 +4,9 @@ from django.core.paginator import Paginator, EmptyPage
 from .models import PQRS, Commets, Files
 from adminUser.models import TypesPQRS
 from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from .forms import *
 
 @login_required
@@ -153,6 +156,7 @@ def closeForUserPQRS(request):
         return HttpResponseRedirect(f"{request.path}?page=1")
     return render(request, 'closeUser_pqrs.html', {'pqrs': pqrs_closed_for_user, 'formSearch': formSearch})
 
+
 @login_required
 def createdPQRS(request):
     if request.method == 'POST':
@@ -160,20 +164,35 @@ def createdPQRS(request):
         file_formset = FileFormSet(request.POST, request.FILES)
         
         if pqrs_form.is_valid() and file_formset.is_valid():
-            pqrs_instance = pqrs_form.save(user=request.user, path=request.path)
-            for form in file_formset:
-                if form.is_valid() and not form.cleaned_data.get('DELETE'):
-                    file = form.save(commit=False)
-                    file.pqrs = pqrs_instance
-                    file.save()
-                else:
-                    print(f"Form {form.prefix} errors: {form.errors}")
-                    
+            try:
+                # Guardar la instancia principal PQRS
+                pqrs_instance = pqrs_form.save(user=request.user, path=request.path)
+
+                # Guardar los archivos asociados
+                for form in file_formset:
+                    if form.is_valid() and not form.cleaned_data.get('DELETE'):
+                        file = form.save(commit=False)
+                        file.pqrs = pqrs_instance
+                        file.save()
+                    else:
+                        print(f"Form {form.prefix} errors: {form.errors}")
+                
+                # Agregar un mensaje de éxito
+                messages.success(request, "PQRS creada exitosamente.")
+
+            except Exception as e:
+                # Registrar y manejar errores
+                print(f"Error al procesar la solicitud: {e}")
+                messages.error(request, "Hubo un problema al procesar tu solicitud. Por favor, intenta nuevamente.")
+
+            # Redirigir al usuario a una página de confirmación o inicio
             return redirect('home')
     else:
         pqrs_form = PQRSCreateForm()
         file_formset = FileFormSet()
+
     return render(request, 'createdpqrs.html', {'pqrs_form': pqrs_form, 'file_formset': file_formset})
+
 
 @login_required
 def pqrs(request, num):
@@ -199,12 +218,14 @@ def pqrs(request, num):
             formComment = CommentForm(request.POST, request.FILES)
             if formComment.is_valid():
                 formComment.save(user=request.user, pqrs=find_pqrs)
+                messages.success(request, "Se ha agregado el comentario exitosamente!")
                 return redirect('findpqrs', num=num)
 
         if 'submit_response' in request.POST:    
             formResponse = ResponsePQRSForm(request.POST, request.FILES)
             if formResponse.is_valid():
                 formResponse.save(user=request.user, pqrs=find_pqrs)
+                messages.success(request, "Se ha enviado la respuesta de forma exitosa!")
                 return redirect('home')
 
         if 'submit_share' in request.POST:
@@ -212,6 +233,7 @@ def pqrs(request, num):
             if formShare.is_valid():
                 formShare.process(find_pqrs)
                 find_pqrs.save()
+                messages.success(request, "Se ha compartido la pqrs con el area de forma exitosa!")
                 return redirect('findpqrs', num=num)
                 
 
@@ -223,6 +245,21 @@ def pqrs(request, num):
         'comments': comments,
         'files': files
     })
+
+@login_required
+def updatePqrs(request, num):
+    pqrs = get_object_or_404(PQRS, num=num)
+    if pqrs.status != "Open":
+        return redirect('findpqrs', num=pqrs.num)
+
+    if request.method == 'POST':
+        form = PQRSUpdateForm(request.POST, instance=pqrs)
+        if form.is_valid():
+            form.save()
+            return redirect('findpqrs', num=pqrs.num)
+    else:
+        form = PQRSUpdateForm(instance=pqrs)
+    return render(request, 'update_pqrs.html', {'form': form})
 
 @login_required
 def closedPQRS(request, num):

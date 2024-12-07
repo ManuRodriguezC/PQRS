@@ -2,6 +2,12 @@
 
 {% block datas %}
 <div>
+    <h3 class="text-cootra text-xl font-semibold mb-4">Descargue de reportes</h3>
+    <form method="post" class="flex flex-row gap-10 mb-5">
+        {% csrf_token %}
+        {{ form.as_p}}
+        <button class="bg-cootra text-white rounded-lg px-5 hover:scale-102 transition-all duration-200">Descargar</button>
+    </form>
     <h3 class="text-2xl text-cootra font-bold mb-4">Estadisticas Usuarios</h3>
     <div class="bg-black/10 rounded-xl w-full flex flex-col p-4 gap-2">
         <div class="w-full flex flex-row justify-around items-center">

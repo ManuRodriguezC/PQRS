@@ -94,3 +94,8 @@ class CreateUserForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if not self.instance.pk:
             self.fields.pop('is_active')
+
+        
+class DateForms(forms.Form):
+    dateInit = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), label="Fecha de Inicio")
+    dateEnd = forms.DateField(widget=forms.TextInput(attrs={'type': 'date'}), label="Fecha Final")

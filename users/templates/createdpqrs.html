@@ -7,6 +7,7 @@
         <form
             method="POST"
             enctype="multipart/form-data"
+            id="pqrs-form"
             class="w-full flex flex-col gap-5 border-2 border-gray-600 p-5 rounded-2xl shadow-2xl bg-black/10">
             {% csrf_token %}
 
@@ -37,11 +38,24 @@
                 </button>
             </div>
             <br>
-            <button type="submit" class="bg-cootra py-2 px-4 text-xl w-60 text-white rounded-md hover:scale-102 transition-all duration-200">Crear PQRS</button>
+            <button
+                type="submit"
+                id="submit-btn"
+                class="bg-cootra py-2 px-4 text-xl w-60 text-white rounded-md hover:scale-102 transition-all duration-200">
+                Crear PQRS
+            </button>
         </form>
     </section>
 
     <script>
+
+        document.getElementById('pqrs-form').addEventListener('submit', function(event) {
+            // Cambiar el texto y desactivar el botón solo cuando el formulario es enviado
+            var button = document.getElementById('submit-btn');
+            button.textContent = 'Cargando...'; // Cambiar el texto del botón
+            button.disabled = true; // Desactivar el botón para evitar múltiples clics
+        });
+
         document.getElementById('add-file-form').onclick = function() {
             // Obtener el número de formularios ya generados
             var formIdx = document.querySelectorAll('.form-row').length;

@@ -17,6 +17,7 @@
                     <p>Fecha Vencimiento: {{pqrs.timeResponse}}</p>
                     {% if pqrs.status == "Open" %}
                         <div class="flex flex-col justify-end bg-blue-100 items-end rounded-lg px-5 py-2 border-[1px] border-gray-500">
+
                             <form method="POST" class="flex flex-row justify-end w-[450px]">
                                 {% csrf_token %}
                                 <input type="hidden" name="submit_share" value="1">
@@ -25,6 +26,7 @@
                                     class="bg-cootra hover:opacity-85 transition-all duration-200 text-white text-sm shadow-xl px-2 rounded-lg">
                                 Compartir</button>
                             </form>
+
                         </div>
                         {% if messages %}
                             <div class="alerts">
@@ -97,7 +99,7 @@
                     {% include "icons/close.html" %}
                 </button>
                 <h2 class="text-cootra text-xl font-semibold mb-4">Agregar Comentario o Respuesta</h2>
-                <form method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4">
+                <form method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4" id="comment-form">
                     <input type="hidden" name="submit_comment" value="1">
                     {% csrf_token %}
                     {% for field in formComment %}
@@ -106,8 +108,10 @@
                             {{ field }}
                         </div>
                     {% endfor %}
-                    <button type="submit"
-                    class="bg-cootra hover:opacity-85 transition-all duration-200 text-white mt-5 text-lg px-5 shadow-xl p-2 rounded-full">
+                    <button
+                        type="submit"
+                        id="comment-submit-btn"
+                        class="bg-cootra hover:opacity-85 transition-all duration-200 text-white mt-5 text-lg px-5 shadow-xl p-2 rounded-full">
                         Agregar Comentario
                     </button>
                 </form>
@@ -121,7 +125,7 @@
                     {% include "icons/close.html" %}
                 </button>
                 <h2 class="text-cootra text-xl font-semibold mb-4">Agregar Respuesta</h2>
-                <form method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4">
+                <form method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4" id="response-form">
                     <input type="hidden" name="submit_response" value="1">
                     {% csrf_token %}
                     {% for field in formResponse %}
@@ -130,8 +134,10 @@
                             {{ field }}
                         </div>
                     {% endfor %}
-                    <button type="submit"
-                    class="bg-cootra hover:opacity-85 transition-all duration-200 text-white mt-5 text-lg px-5 shadow-xl p-2 rounded-full">
+                    <button
+                        type="submit"
+                        id="response-submit-btn"
+                        class="bg-cootra hover:opacity-85 transition-all duration-200 text-white mt-5 text-lg px-5 shadow-xl p-2 rounded-full">
                         Enviar Respuesta
                     </button>
                 </form>
@@ -178,6 +184,21 @@
     </section>
 
     <script>
+
+        document.getElementById('response-form').addEventListener('submit', function(event) {
+            // Cambiar el texto y desactivar el botón solo cuando el formulario es enviado
+            var button = document.getElementById('response-submit-btn');
+            button.textContent = 'Enviando ...'; // Cambiar el texto del botón
+            button.disabled = true; // Desactivar el botón para evitar múltiples clics
+        });
+
+        document.getElementById('comment-form').addEventListener('submit', function(event) {
+            // Cambiar el texto y desactivar el botón solo cuando el formulario es enviado
+            var button = document.getElementById('comment-submit-btn');
+            button.textContent = 'Comentando ...'; // Cambiar el texto del botón
+            button.disabled = true; // Desactivar el botón para evitar múltiples clics
+        });
+
         const backdrop = document.getElementById('backdrop')
 
         const dialog = document.getElementById('dialog')

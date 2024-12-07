@@ -38,7 +38,7 @@
 
         <div>
             <h2 class="text-xl font-semibold underline underline-offset-4 decoration-2 mb-6">Nueva Area de Control y Servicio</h2>
-            <form method="POST">
+            <form method="POST" id="area-form">
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="flex flex-col justify-center items-start gap-4">
@@ -46,11 +46,23 @@
                         {{ field }}
                     </div>
                 {% endfor %}
-                <button class="bg-cootra hover:scale-105 transition-all duration-200 text-white mt-5 text-2xl px-5 shadow-xl p-2 rounded-full" type="submit">
+                <button
+                    class="bg-cootra hover:scale-105 transition-all duration-200 text-white mt-5 text-2xl px-5 shadow-xl p-2 rounded-full"
+                    id="submit-btn"
+                    type="submit">
                     Crear Area
                 </button>
             </form>
         </div>
     </section>
+
+    <script>
+        document.getElementById('area-form').addEventListener('submit', function(event) {
+            // Cambiar el texto y desactivar el botón solo cuando el formulario es enviado
+            var button = document.getElementById('submit-btn');
+            button.textContent = 'Cargando...'; // Cambiar el texto del botón
+            button.disabled = true; // Desactivar el botón para evitar múltiples clics
+        });
+    </script>
 
 {% endblock datas %}

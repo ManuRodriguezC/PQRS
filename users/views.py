@@ -183,7 +183,7 @@ def createdPQRS(request):
             except Exception as e:
                 # Registrar y manejar errores
                 print(f"Error al procesar la solicitud: {e}")
-                messages.error(request, "Hubo un problema al procesar tu solicitud. Por favor, intenta nuevamente.")
+                messages.error(request, "Hubo un problema al enviar la notificacion.")
 
             # Redirigir al usuario a una página de confirmación o inicio
             return redirect('home')

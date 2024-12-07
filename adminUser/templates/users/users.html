@@ -62,7 +62,7 @@
                     {% include "icons/close.html" %}
                 </button>
                 <h2 class="text-2xl text-cootra font-semibold">Crear nuevo Usuario</h2>
-                <form method="POST" class="w-full my-10 flex flex-col justify-center ">
+                <form method="POST" class="w-full my-10 flex flex-col justify-center" id="user-form">
                     {% csrf_token %}
                     <div class="grid grid-cols-2 gap-5">
                         {% for field in formUser %}
@@ -75,7 +75,12 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <button class="bg-cootra text-white px-6 py-2 rounded-lg hover:scale-102 transition-all duration-200 mt-10" type="submit">Crear Usuario</button>
+                    <button
+                        class="bg-cootra text-white px-6 py-2 rounded-lg hover:scale-102 transition-all duration-200 mt-10"
+                        id="submit-btn"
+                        type="submit">
+                        Crear Usuario
+                    </button>
                 </form>
                 {% if errors %}
                 <ul class="errorlist">
@@ -117,6 +122,13 @@
         backdrop.addEventListener('click', closeDialog);
         closeDialogButton.addEventListener('click', closeDialog);
         openDialogButton.addEventListener('click', openDialog);
+
+        document.getElementById('user-form').addEventListener('submit', function(event) {
+            // Cambiar el texto y desactivar el botón solo cuando el formulario es enviado
+            var button = document.getElementById('submit-btn');
+            button.textContent = 'Cargando...'; // Cambiar el texto del botón
+            button.disabled = true; // Desactivar el botón para evitar múltiples clics
+        });
 
     </script>
 

@@ -9,7 +9,7 @@ from .models import Areas, TypesPQRS
 from .forms import CreateUserForm, DateForms
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from .decorators import check_superadmin
+from .decorators import check_superadmin, check_coordinador
 import pandas as pd
 from io import BytesIO
 from django.http import HttpResponse
@@ -115,6 +115,13 @@ def updateUser(request, id):
 
 @login_required
 @check_superadmin()
+def deleteUser(request, id):
+    user = get_object_or_404(CustumUser, id=id)
+    user.delete()
+    return redirect('users')
+
+@login_required
+@check_coordinador()
 def statistics(request):
     if request.method == 'POST':
         form = DateForms(request.POST)

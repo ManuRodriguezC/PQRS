@@ -14,7 +14,7 @@ def openPQRS(request):
     formSearch = SearchForm()
     userType = request.user
 
-    if userType.is_staff:
+    if userType.permissions == "superadmin" or userType.permissions == "coordinador":
         openPQRS = PQRS.objects.filter(status="Open")
     else:
         openPQRS = PQRS.objects.filter(areas__icontains=userType.area, status="Open")
@@ -44,7 +44,7 @@ def openPQRS(request):
 def closePQRS(request):
     formSearch = SearchForm()
     userType = request.user
-    if userType.is_staff:
+    if userType.permissions == "superadmin" or userType.permissions == "coordinador":        
         closePQRS = PQRS.objects.filter(status="Close")
     else:
         closePQRS = PQRS.objects.filter(areas__icontains=userType.area, status="Close")
@@ -73,7 +73,7 @@ def closePQRS(request):
 def expiredPQRS(request):
     formSearch = SearchForm()
     userType = request.user
-    if userType.is_staff:
+    if userType.permissions == "superadmin" or userType.permissions == "coordinador":        
         expirePQRS = PQRS.objects.filter(status="Expired")
     else:
         expirePQRS = PQRS.objects.filter(areas__icontains=userType.area, status="Expired")
@@ -102,7 +102,7 @@ def expiredPQRS(request):
 def waitResponsePQRS(request):
     formSearch = SearchForm()
     userType = request.user
-    if userType.is_staff:
+    if userType.permissions == "superadmin" or userType.permissions == "coordinador":        
         waitPQRS = PQRS.objects.filter(status="Wait")
     else:
         waitPQRS = PQRS.objects.filter(areas__icontains=userType.area, status="Wait")
@@ -131,7 +131,7 @@ def waitResponsePQRS(request):
 def closeForUserPQRS(request):
     formSearch = SearchForm()
     userType = request.user
-    if userType.is_staff:
+    if userType.permissions == "superadmin" or userType.permissions == "coordinador":
         closedForUser = PQRS.objects.filter(status="CloseForUser")
     else:
         closedForUser = PQRS.objects.filter(areas__icontains=userType.area, status="CloseForUser")
@@ -205,7 +205,7 @@ def pqrs(request, num):
         return redirect("home")
     
     listAreas = find_pqrs.areas.split(",")
-    if str(request.user.area) not in listAreas and not request.user.is_staff:
+    if str(request.user.area) not in listAreas and not (request.user.permissions == "superadmin" or request.user.permissions == "coordinador"):
         return redirect("home")
 
     formShare = ShareForm(areas=find_pqrs.areas)

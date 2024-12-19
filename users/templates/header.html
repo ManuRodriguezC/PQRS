@@ -15,10 +15,13 @@
     <p class="font-semibold text-xl">
       {% if request.user.area %}
       {{ request.user.area}} - 
-      {% endif %}
+      {% endif %}okurq
       {{ request.user.username }}</p>
-    <a href="{% url 'logout' %}" class="exit">
-      {% include "icons/exit.html" %}
-    </a>
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button class="exit" type="submit">
+          {% include "icons/exit.html" %}
+        </button>
+      </form>
   </div>
 </header>

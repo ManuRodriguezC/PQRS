@@ -14,15 +14,16 @@
             class="w-full flex flex-col border-2 border-gray-500 rounded-lg shadow-lg text-sm mt-4"
             >
             <ul
-                class="flex flex-row text-base font-semibold bg-gray-300 px-2 py-2 rounded-lg"
+                class="w-full flex flex-row text-base font-semibold bg-gray-300 px-2 py-2 rounded-lg"
             >
-                <li class="w-[15%] text-center">Usuario</li>
-                <li class="w-[15%] text-center">Area</li>
-                <li class="w-[25%] text-center">Nombre</li>
-                <li class="w-[20%] text-center">Correo</li>
+                <li class="w-[14%] text-center">Usuario</li>
+                <li class="w-[14%] text-center">Area</li>
+                <li class="w-[20%] text-center">Nombre</li>
+                <li class="w-[25%] text-center">Correo</li>
                 <li class="w-[10%]">Rol</li>
                 <li class="w-[6%]">Admin</li>
                 <li class="w-[6%]">Estado</li>
+                <li class="w-[3%]"></li>
                 <li class="w-[3%]"></li>
             </ul>
             {% for user in users %}
@@ -30,19 +31,33 @@
                 class="flex flex-row py-2 bg-gray-100/40 rounded-lg hover:bg-slate-200 transition-colors duration-200 px-2 text-sm"
             >
                 {% if user.area %}
-                <li class="w-[15%]">{{ user.username }}</li>
-                <li class="w-[15%]">{{ user.area }}</li>
-                <li class="w-[25%]">{{ user.first_name }} {{user.last_name}}</li>
-                <li class="w-[20%]">{{ user.email }}</li>
+                <li class="w-[14%]">{{ user.username }}</li>
+                <li class="w-[14%]">{{ user.area }}</li>
+                <li class="w-[20%]">{{ user.first_name }} {{user.last_name}}</li>
+                <li class="w-[25%]">{{ user.email }}</li>
                 <li class="w-[10%]">{{ user.permissions}}</li>
-                <li class="w-[6%]">{{ user.is_staff }}</li>
+                <li class="w-[6%]">
+                    {% if user.is_staff %}
+                        Si
+                    {% else %}
+                        No
+                    {% endif %}
+                </li>
                 <li class="w-[6%]">
                 {% if user.is_active %} Activo {% else %} Inactivo {% endif %}
                 </li>
                 <li class="w-[3%] flex justify-center items-center">
-                <a class="hover:scale-110" href="{% url 'updateUser' user.id%}">
-                    {% include "icons/editUser.html" %}
-                </a>
+                    <a class="hover:scale-110" href="{% url 'updateUser' user.id%}">
+                        {% include "icons/editUser.html" %}
+                    </a>
+                </li>
+                <li class="w-[3%] flex justify-center items-center">
+                    <a
+                        class="hover:scale-110"
+                        href="{% url 'deleteUser' user.id %}"
+                        onclick="return confirm('Esta seguro de eliminar este usuario?')">
+                        {% include "icons/deleteUser.html" %}
+                    </a>
                 </li>
                 {% endif %}
             </ul>

@@ -57,31 +57,33 @@
                 </a>
             </div>
         </div>
-        {% if request.user.is_staff %}
+        {% if request.user.permissions == "superadmin" or request.user.permissions == "coordinador" %}
         <div  id="section-2" class="flex flex-col px-5 py-7">
-            <p class="text-base text-white font-semibold underline underline-offset-4">Administrador</p>
+            <p class="text-base text-white font-semibold underline underline-offset-4">Administrador o Coordinador</p>
             <div class="text-base flex flex-col gap-4 mt-5">
+                {% if request.user.is_staff %}
                 <a 
                   href="{% url 'areas' %}"
                   class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
-                  border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
-                    {% include "icons/areas.html" %}
-                    <p>Areas</p>
+                    border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
+                      {% include "icons/areas.html" %}
+                      <p>Areas</p>
                 </a>
                 <a 
                   href="{% url 'typesPQRS' %}"
                   class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
                   border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
-                    {% include "icons/listpqrs.html" %}
-                    <p>Tipos PQRS</p>
+                  {% include "icons/listpqrs.html" %}
+                  <p>Tipos PQRS</p>
                 </a>
                 <a 
                   href="{% url 'users' %}"
                   class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
                   border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
-                    {% include "icons/users.html" %}
-                    <p>Usuarios</p>
+                  {% include "icons/users.html" %}
+                  <p>Usuarios</p>
                 </a>
+                {% endif %}
                 <a 
                   href="{% url 'statistics' %}"
                   class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra

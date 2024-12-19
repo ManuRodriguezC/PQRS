@@ -10,3 +10,13 @@ def check_superadmin():
             return redirect("home")
         return _wrapped_view
     return decorator
+
+def check_coordinador():
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            if getattr(request.user, "permissions", None) == "coordinador" or getattr(request.user, "permissions", None) == "superadmin":
+                return view_func(request, *args, **kwargs)
+            return redirect("home")
+        return _wrapped_view
+    return decorator

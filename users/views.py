@@ -286,8 +286,10 @@ def checkSuccessfull(request, num, token):
 def checkBad(request, num, token):
     try:
         pqrs = get_object_or_404(PQRS, num=num, tokenControl=token)
-        if pqrs != "Wait":
-            return redirect('success')
+        # print(f"1{pqrs.status}")
+        # if pqrs != "Wait":
+        #     print(f"2{pqrs.status}")
+        #     return redirect('success')
         pqrs.status = 'Open'
         pqrs.tokenControl = ""
         pqrs.save()

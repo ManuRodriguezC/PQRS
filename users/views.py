@@ -212,6 +212,10 @@ def pqrs(request, num):
 
     comments = Commets.objects.filter(pqrs=find_pqrs)
     files = Files.objects.filter(pqrs=find_pqrs)
+    
+    responseUser = None
+    if find_pqrs.status != "Open":
+        responseUser = ResponsePQRS.objects.filter(pqrs=find_pqrs).first() # Add
 
     if request.method == "POST":
         if 'submit_comment' in request.POST:    
@@ -243,7 +247,8 @@ def pqrs(request, num):
         'formResponse': formResponse,
         'formShare': formShare,
         'comments': comments,
-        'files': files
+        'files': files,
+        'response': responseUser
     })
 
 @login_required

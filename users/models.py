@@ -96,6 +96,7 @@ class PQRS(models.Model):
             to=[email],
             )
         if file:
+            file.seek(0)
             email_message.attach(file.name, file.read(), file.content_type)
 
         email_message.content_subtype = 'html'
@@ -109,6 +110,12 @@ class Files(models.Model):
     pqrs = models.ForeignKey(PQRS, on_delete=models.SET_NULL, null=True, blank=True)
     file = models.FileField(null=True, blank=True, upload_to='files/')
     created = models.DateTimeField(auto_now_add=True)
+    
+    # Si l archivo no se agrega no se guarda el file
+    def save(self, *args, **kwargs):
+        if not self.file:
+            return
+        super().save(*args, **kwargs)
     
     def nameFile(self):
         if self.file:
@@ -134,3 +141,11 @@ class ResponsePQRS(models.Model):
     response_by = models.CharField(max_length=200)
     file = models.FileField(null=True, blank=True, upload_to='files/responses')
     date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.response}"
+    
+    def nameFile(self):
+        if self.file:
+            return self.file.name.split('/')[-1]
+        return None

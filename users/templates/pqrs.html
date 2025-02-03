@@ -71,14 +71,16 @@
                     <div class="pb-7 pt-5 px-3 my-2 border-2 border-cootra rounded-lg bg-white shadow-con">
                         <p>Respuesta: {{response.response}}</p>
                         <p>Fecha de Respuesta: {{response.date}}</p>
-                        <p>Archivo adjunto: 
-                            <a
-                            href="{{ response.file.url }}"
-                            class="text-cootra hover:underline underline-offset-1 transition-all duration-200"
-                            target="_blank">
-                            {{ response.nameFile }}
-                        </a>
-                        </p>
+                        {% if  response.file %}                    
+                            <p>Archivo adjunto: 
+                                <a
+                                href="{{ response.file.url }}"
+                                class="text-cootra hover:underline underline-offset-1 transition-all duration-200"
+                                target="_blank">
+                                {{ response.nameFile }}
+                            </a>
+                            </p>
+                        {% endif %}
                         <p>Enviado por: {{response.response_by}}</p>
                     </div>
                 </div>

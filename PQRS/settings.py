@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     # 'django_browser_reload',
     'tailwind',
     'theme',
+    'rest_framework', # Actualización para la API
+     'rest_framework.authtoken',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -158,3 +160,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000"
 ]
+
+# Actualización para la API
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+    ],
+}

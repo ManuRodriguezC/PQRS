@@ -8,6 +8,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from rest_framework import viewsets
+from .serializer import PQRSSerializer, TypesPQRSApiSerializer
+from rest_framework.permissions import IsAuthenticated
 
 @login_required
 def openPQRS(request):
@@ -307,3 +310,15 @@ def success(request):
 
 def failed(request):
     return render(request, 'failed.html')
+
+class createdPQRSApi(viewsets.ModelViewSet):
+    queryset = PQRS.objects.all()
+    serializer_class = PQRSSerializer
+    http_method_names = ['post']
+    permission_classes = [IsAuthenticated]
+
+class typesPQRSApi(viewsets.ModelViewSet):
+    queryset = TypesPQRS.objects.all()
+    serializer_class = TypesPQRSApiSerializer
+    http_method_names = ['get']
+    permission_classes = [IsAuthenticated]

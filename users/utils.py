@@ -22,6 +22,7 @@ def sendUserCreate(pqrs, name, num, email):
     email_message_user.send()
 
 def sendAsesorsCreate(num, pqrs, emails):
+    # http://190.145.132.230:8001/
     URL="http://127.0.0.1:8000/pqrs/"
     
     url = f"{URL}{num}"

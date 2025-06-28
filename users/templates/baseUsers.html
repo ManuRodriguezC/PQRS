@@ -3,7 +3,9 @@
 
 {% block content %}
 <body class="flex w-full h-screen overflow-hidden">
-    <aside id="aside" class="relative w-1/5 bg-backlogin text-white p-4 h-full transition-all duration-200">
+    <aside
+      id="aside"
+      class="relative w-1/5 bg-backlogin text-white p-4 h-full transition-all duration-200">
       <button id="bt-control" class="absolute -right-4 top-20 bg-white border-2 border-cootra rounded-full transition-all duration-200">
         {% include "icons/arrowLeft.html" %}
       </button>
@@ -13,87 +15,90 @@
                 <p class="text-xl text-white">{{ request.user.username }}</p>
                 {% include "icons/user.html" %}
             </div>
-            <p class="text-sm text-gray-400">pqrs v.1</p>
+            <p class="text-sm text-gray-400">pqrs v.2</p>
         </div>
 
-        <div id="section-1" class="flex flex-col px-5 py-7">
-            <p class="text-base text-white font-semibold underline underline-offset-4">General</p>
-            <div class="text-base flex flex-col gap-4 mt-5">
-                <a 
-                  href="{% url 'home' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
-                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
-                    {% include "icons/openCases.html" %}
-                    <p>Casos Abiertos</p>
-                </a>
-                <a 
-                  href="{% url 'waitingpqrs' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
-                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
-                    {% include "icons/wait.html" %}
-                    <p>Casos en Espera</p>
-                </a>
-                <a 
-                  href="{% url 'closedpqrs' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
-                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
-                    {% include "icons/closeCases.html" %}
-                    <p>Casos Cerrados</p>
-                </a>
-                <a 
-                  href="{% url 'closedforuserpqrs' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
-                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
-                    {% include "icons/closeUser.html" %}
-                    <p>Cerrados por Asociado</p>
-                </a>
-                
-                <a 
-                  href="{% url 'expiredpqrs' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
-                  border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
-                    {% include "icons/venCases.html" %}
-                    <p>Casos Casos Vencidos</p>
-                </a>
-            </div>
-        </div>
-        {% if request.user.permissions == "superadmin" or request.user.permissions == "coordinador" %}
-        <div  id="section-2" class="flex flex-col px-5 py-7">
-            <p class="text-base text-white font-semibold underline underline-offset-4">Administrador o Coordinador</p>
-            <div class="text-base flex flex-col gap-4 mt-5">
-                {% if request.user.is_staff %}
-                <a 
-                  href="{% url 'areas' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
+        <div class="h-full overflow-y-scroll scrollbar-hide pb-10">
+          <div id="section-1" class="flex flex-col px-5 py-7 overflow-y-auto">
+              <p class="text-base text-white font-semibold underline underline-offset-4">General</p>
+              <div class="text-base flex flex-col gap-4 mt-5">
+                  <a 
+                    href="{% url 'home' %}"
+                    class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                    border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
+                      {% include "icons/openCases.html" %}
+                      <p>Casos Abiertos</p>
+                  </a>
+                  <a 
+                    href="{% url 'waitingpqrs' %}"
+                    class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                    border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
+                      {% include "icons/wait.html" %}
+                      <p>Casos en Espera</p>
+                  </a>
+                  <a 
+                    href="{% url 'closedpqrs' %}"
+                    class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                    border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
+                      {% include "icons/closeCases.html" %}
+                      <p>Casos Cerrados</p>
+                  </a>
+                  <a 
+                    href="{% url 'closedforuserpqrs' %}"
+                    class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                    border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
+                      {% include "icons/closeUser.html" %}
+                      <p>Cerrados por Asociado</p>
+                  </a>
+                  
+                  <a 
+                    href="{% url 'expiredpqrs' %}"
+                    class="flex flex-row justify-start gap-2 px-5 py-1 bg-white text-cootra rounded-2xl hover:scale-105
+                    border-[1px] border-gray-500 hover:bg-gray-200 transition-all duration-200">
+                      {% include "icons/venCases.html" %}
+                      <p>Casos Casos Vencidos</p>
+                  </a>
+              </div>
+          </div>
+          {% if request.user.permissions == "superadmin" or request.user.permissions == "coordinador" %}
+          <div  id="section-2" class="flex flex-col px-5 py-7">
+              <p class="text-base text-white font-semibold underline underline-offset-4">Administrador o Coordinador</p>
+              <div class="text-base flex flex-col gap-4 mt-5">
+                  {% if request.user.is_staff %}
+                  <a 
+                    href="{% url 'areas' %}"
+                    class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
+                      border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
+                        {% include "icons/areas.html" %}
+                        <p>Areas</p>
+                  </a>
+                  <a 
+                    href="{% url 'typesPQRS' %}"
+                    class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
                     border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
-                      {% include "icons/areas.html" %}
-                      <p>Areas</p>
-                </a>
-                <a 
-                  href="{% url 'typesPQRS' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
-                  border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
-                  {% include "icons/listpqrs.html" %}
-                  <p>Tipos PQRS</p>
-                </a>
-                <a 
-                  href="{% url 'users' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
-                  border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
-                  {% include "icons/users.html" %}
-                  <p>Usuarios</p>
-                </a>
-                {% endif %}
-                <a 
-                  href="{% url 'statistics' %}"
-                  class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
-                  border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
-                    {% include "icons/statistics.html" %}
-                    <p>Estadisticas</p>
-                </a>
-            </div>
+                    {% include "icons/listpqrs.html" %}
+                    <p>Tipos PQRS</p>
+                  </a>
+                  <a 
+                    href="{% url 'users' %}"
+                    class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
+                    border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
+                    {% include "icons/users.html" %}
+                    <p>Usuarios</p>
+                  </a>
+                  {% endif %}
+                  <a 
+                    href="{% url 'statistics' %}"
+                    class="flex flex-row justify-start gap-2 px-5 py-1 rounded-2xl bg-white text-cootra
+                    border-[1px] border-gray-500 hover:bg-gray-200 hover:scale-105  transition-all duration-200">
+                      {% include "icons/statistics.html" %}
+                      <p>Estadisticas</p>
+                  </a>
+              </div>
+          </div>
+          {% endif %}
         </div>
-        {% endif %}
+
     </aside>
 
     <main id="main" class="w-4/5 flex flex-col h-screen bg-backpqr transition-all duration-200">

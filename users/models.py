@@ -18,7 +18,7 @@ class PQRSManager(models.Manager):
 
 class PQRS(models.Model):
     """"""
-    num = models.CharField(max_length=20)
+    num = models.CharField(max_length=20, null=True, blank=True, unique=True)
     typePQRS = models.ForeignKey(TypesPQRS, on_delete=models.CASCADE)
     areas = models.CharField(max_length=1000, null=True, blank=True)
     name = models.CharField(max_length=200)
@@ -57,7 +57,7 @@ class PQRS(models.Model):
             self.closed = timezone.now()
             self.save()
         if self.dateResponse and self.dateResponse < timezone.now() and self.status == "Wait":
-            self.status = "Close"
+            self.status = "CloseForUser"
             self.closed = timezone.now()
             self.save()
 

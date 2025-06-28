@@ -1,7 +1,13 @@
 from django.conf.urls.static import static
 from django.conf import settings
-from django.urls import path
+from django.urls import path, include
 from .views import *
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'api-pqrs', createdPQRSApi)
+router.register(r'api-types-pqrs', typesPQRSApi)
+
 
 urlpatterns = [
     path('', openPQRS, name="home"),
@@ -17,4 +23,5 @@ urlpatterns = [
     path('solicitud-finalizada-sin-exito/<str:num>/<str:token>/', checkBad, name="checkfailed"),
     path('solicitud-finalizada', success, name="success"),
     path('solicitud-pendiente', failed, name="failed"),
+    path('api/', include(router.urls)),  # Rutas de la API
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -316,6 +316,26 @@ class createdPQRSApi(viewsets.ModelViewSet):
     serializer_class = PQRSSerializer
     http_method_names = ['post']
     permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        # Guardar el objeto pero sin commit aún (no se guarda en DB todavía)
+        instance = serializer.save(commit=False)
+
+        # Agregar el usuario autenticado
+        if self.request.user:
+            instance.userCreated = self.request.user.username
+
+        # Guardar en la base de datos
+        instance.save()
+
+        # Obtener correos de usuarios del área correspondiente
+        allUsersArea = CustumUser.objects.filter(area=instance.typePQRS.area_redirect)
+        emails = [user.email for user in allUsersArea]
+
+        # Enviar correos
+        sendAsesorsCreate(instance.num, instance.typePQRS, emails)
+        sendUserCreate(instance.typePQRS, instance.name, instance.num, instance.email)
+
 
 class typesPQRSApi(viewsets.ModelViewSet):
     queryset = TypesPQRS.objects.all()
